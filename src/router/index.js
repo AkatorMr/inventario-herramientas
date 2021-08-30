@@ -2,6 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
+import AgregarOperario from '../views/CargarOperario.vue'
+import AgregarSector from "../views/CargarSector.vue"
+import AgregarHerramienta from "../views/CargarHerramientas.vue"
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -9,6 +13,21 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/addope',
+    name: 'Add-Operario',
+    component: AgregarOperario
+  },
+  {
+    path: '/addsec',
+    name: 'Add-Sector',
+    component: AgregarSector
+  },
+  {
+    path: '/addher',
+    name: 'Add-Herramienta',
+    component: AgregarHerramienta
   },
   {
     path: '/about',
