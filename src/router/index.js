@@ -1,19 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import viewConsumo from '../views/viewConsumo.vue'
 
 import AgregarOperario from '../views/CargarOperario.vue'
-import AgregarSector from "../views/CargarSector.vue"
+import viewSectores from "../views/viewSector.vue"
 import AgregarHerramienta from "../views/CargarHerramientas.vue"
+import viewSolicitud from "../views/viewSolicitud.vue"
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Generar Consumo',
+    component: viewConsumo
   },
+  {path:'/solicitud',name:'Solicitud',component:viewSolicitud},
   {
     path: '/addope',
     name: 'Add-Operario',
@@ -22,7 +24,7 @@ const routes = [
   {
     path: '/addsec',
     name: 'Add-Sector',
-    component: AgregarSector
+    component: viewSectores
   },
   {
     path: '/addher',

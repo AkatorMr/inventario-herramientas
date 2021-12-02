@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
+      <router-link to="/">Generar Consumos</router-link> |
+      <router-link to="/solicitud">Agregar solicitud</router-link> |
       <router-link to="/addope">Operarios</router-link> |
       <router-link to="/addsec">Sector</router-link> |
       <router-link to="/addher">Herramientas</router-link> |
