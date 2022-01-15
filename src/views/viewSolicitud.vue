@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="MuroDeCarga" v-if="bMuroDeCarga"></div>
+
     <input-drop-down
       :prompt="'Legajo o Nombre'"
       :lista_completa="lista_operarios"
@@ -79,6 +80,9 @@
         type="number"
       />
     </div>
+    <button class="btn btn-outline-primary" @click="CargarSolicitud()">
+      Cargar Solicitud
+    </button>
   </div>
 </template>
 
@@ -94,7 +98,13 @@ export default {
     return {
       lista_sectores:[],
       lista_operarios:[],
-      tNombre:"",bMuroDeCarga:false
+      lista_codigos_filtro: [],
+      tNombre:"",bMuroDeCarga:false,
+      bFocusCodigoODescripcion: true,
+      tCodigo: "",
+      tCantidad: "",
+       
+      tDescripcion: "",
 
     }
   },
@@ -117,9 +127,6 @@ export default {
       formData.append("legajo", legajo);
       formData.append("codigo", that.tCodigo);
       formData.append("cantidad", that.tCantidad);
-      formData.append("valeoracle",that.tVale.Oracle);
-      formData.append("mpot",that.tVale.MPot);
-      formData.append("mpvale",that.tVale.MPvale);
       console.log(formData);
       //formData.append("nombre", that.op_nombre);
       //formData.append("sector", that.op_sector);
@@ -146,9 +153,6 @@ export default {
       this.tDescripcion = "";
       this.tNombre = "";
       this.tCantidad = 0;
-      this.tVale.Oracle=null;
-      this.tVale.MPvale=null;
-      this.tVale.MPot=null;
     },
     ListarOperarios: function () {
       let that = this;
@@ -171,10 +175,39 @@ export default {
         }
       });
     },
+    ListarCódigos: function () {
+      let that = this;
+      fetch("/api/index.php?ListarCodigos")
+        .then((response) => response.json())
+        .then((resp) => (that.lista_codigos = resp));
+    },
+    FiltrarHerramienta: function () {
+      this.lista_codigos_filtro = [];
+      for (let item in this.lista_codigos) {
+        let cod = this.lista_codigos[item].Codigo;
+        if (cod == null) continue;
+
+        let desc = this.lista_codigos[item].Descripcion;
+        if (desc == null) continue;
+
+        if (
+          (cod.includes(this.tCodigo.toUpperCase()) || this.tCodigo == "") &&
+          (desc.includes(this.tDescripcion.toUpperCase()) ||
+            this.tDescripcion == "")
+        ) {
+          this.lista_codigos_filtro.push({
+            Codigo: this.lista_codigos[item].Codigo,
+            Descripcion: this.lista_codigos[item].Descripcion,
+          });
+          if (this.lista_codigos_filtro.length > 10) break;
+        }
+      }
+    },
     
   },
   mounted() {
     this.ListarOperarios();
+    this.ListarCódigos();
   },
 }
 </script>

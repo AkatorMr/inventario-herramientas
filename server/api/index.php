@@ -69,11 +69,11 @@ EOF;
 
         //Esto vale oro
         $sql = "SELECT `solicitudes`.`id` AS ide , `solicitudes`.`cod_herramienta` , `operarios`.`Nombre` FROM `solicitudes`
-INNER JOIN `operarios` ON `solicitudes`.`legajo_operario` = `operarios`.`legajo` 
-WHERE `nombre`='Almacen' 
-AND `solicitudes`.`estado` = 'DISPONIBLE' 
-AND `solicitudes`.`cod_herramienta`='$codigo' 
-LIMIT 1;";
+        INNER JOIN `operarios` ON `solicitudes`.`legajo_operario` = `operarios`.`legajo` 
+        WHERE `nombre`='Almacen' 
+        AND `solicitudes`.`estado` = 'DISPONIBLE' 
+        AND `solicitudes`.`cod_herramienta`='$codigo' 
+        LIMIT 1;";
         error_log($sql);
 
         //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
@@ -101,6 +101,34 @@ LIMIT 1;";
                 exit();
             }
 
+        echo json_encode("error");
+        die();
+    }else if(strpos($comando,"NuevaSolicitud")!==FALSE){
+    
+        
+        $legajo = $_POST["legajo"];
+        $codigo = $_POST["codigo"];
+        $cantidad = $_POST["cantidad"];
+        
+        //include "editar.xlsx.php";
+
+        $fecha_solicitud = date("Y-m-d");
+        //echo json_encode($fecha_consumo);
+        //exit();
+
+        $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_solicitud', \'AGREGAR\', \'0000-00-00\', \'0\', \'0000-00-00\');";
+        $sql = "CALL cargarSolicitud('$codigo','$legajo',$cantidad,'$fecha_solicitud',@SALIDA);";
+        //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
+        // deberia cambiar la tabla y poner que sea con cantidad y no por unidad
+        $res = $mysqli->query($sql);
+        //print_r($res);
+        //echo $res->num_rows;
+        if($res->num_rows>0){
+            echo json_encode("ok");
+            exit();   
+
+        }
+        
         echo json_encode("error");
         die();
     }

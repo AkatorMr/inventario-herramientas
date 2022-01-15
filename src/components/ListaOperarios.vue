@@ -2,9 +2,25 @@
   <div class="">
     
       <button @click="ListarOperarios">Click</button>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item" v-for="(a,key) of lista_operarios" :key="key">{{a.Nombre}}</li>
-      </ul>
+      
+      <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Legajo</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Apellido</th>
+      <th scope="col">Sector</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(a,key) of lista_operarios" :key="key">
+      <th scope="row">{{a.legajo}}</th>
+      <td>{{a.Nombre}}</td>
+      <td>{{a.Apellido}}</td>
+      <td>{{a.Sector}}</td>
+    </tr>
+  </tbody>
+</table>
   </div>
 </template>
 
