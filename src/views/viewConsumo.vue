@@ -2,17 +2,17 @@
   <div class="container">
     <div class="MuroDeCarga" v-if="bMuroDeCarga"></div>
     <div>
-      <div class="input-group mb-3">
+      <div v-for="(a,key) of lista_a_consumir" :key="key" class="input-group mb-3">
         <span class="input-group-text col-md-2">Código y Descripción:</span>
         <input
           type="text"
           class="form-control col-md-1"
           placeholder="Código"
           aria-label="Código"
-          v-model="tCodigo"
-          @keyup="FiltrarHerramienta()"
-          @focus="bFocusCodigoODescripcion = true"
-          @blur="bFocusCodigoODescripcion = false"
+          v-model="a.tCodigo"
+          @keyup="FiltrarHerramienta(a)"
+          @focus="a.bFocusCodigoODescripcion = true"
+          @blur="a.bFocusCodigoODescripcion = false"
         />
 
         <input
@@ -21,16 +21,16 @@
           style="width: 35%"
           placeholder="Descripción"
           aria-label="Descripción"
-          v-model="tDescripcion"
-          @keyup="FiltrarHerramienta()"
-          @focus="bFocusCodigoODescripcion = true"
-          @blur="bFocusCodigoODescripcion = false"
+          v-model="a.tDescripcion"
+          @keyup="FiltrarHerramienta(a)"
+          @focus="a.bFocusCodigoODescripcion = true"
+          @blur="a.bFocusCodigoODescripcion = false"
         />
 
         <ul
           :class="
             'dropdown-menu ' +
-            (lista_codigos_filtro.length > 0 && bFocusCodigoODescripcion
+            (lista_codigos_filtro.length > 0 && a.bFocusCodigoODescripcion
               ? 'show'
               : '')
           "
@@ -48,9 +48,9 @@
               v-for="(item, key) in lista_codigos_filtro"
               :key="key"
               @mousedown="
-                tCodigo = item.Codigo;
-                tDescripcion = item.Descripcion;
-                FiltrarHerramienta();
+                a.tCodigo = item.Codigo;
+                a.tDescripcion = item.Descripcion;
+                FiltrarHerramienta(a);
               "
               >{{ item.Codigo }} | {{ item.Descripcion }}</a
             >
@@ -66,7 +66,7 @@
           class="form-control col-md"
           placeholder="Cantidad"
           aria-label="Cantidad"
-          v-model="tCantidad"
+          v-model="a.tCantidad"
           type="number"
         />
         <button
@@ -74,7 +74,7 @@
           @click="AgregarHerramientaFaltante"
           :class="
             'btn btn-' +
-            (AgregarDo == 'Agregar' ? 'outline-info' : 'success') +
+            (AgregarDo == 'Agregar Código' ? 'outline-info' : 'success') +
             ' form-control col-md'
           "
         >
@@ -83,7 +83,7 @@
       </div>
 
       <div class="mb-3 d-grid gap-1 d-md-flex justify-content-md-end">
-        <button class="btn btn-outline-success me-md-1">Agregar</button>
+        <button class="btn btn-outline-success me-md-1" v-on:click="AgregarLineaConsumo">Agregar Línea</button>
       </div>
     </div>
     <input-drop-down
@@ -152,6 +152,7 @@ export default {
       bMuroDeCarga: false,
       tVale: { Oracle: null, MPot: null, MPvale: null },
       AgregarDo: "Agregar",
+      lista_a_consumir:[],
     };
   },
 
@@ -170,8 +171,11 @@ export default {
 
       var formData = new FormData();
       formData.append("legajo", legajo);
-      formData.append("codigo", that.tCodigo);
-      formData.append("cantidad", that.tCantidad);
+
+      for(index in this.lista_a_consumir){
+        formData.append("codigo["+index+"]", that.lista_a_consumir[index].tCodigo);
+        formData.append("cantidad["+index+"]", that.lista_a_consumir[index].tCantidad);
+      }
       formData.append("valeoracle", that.tVale.Oracle);
       formData.append("mpot", that.tVale.MPot);
       formData.append("mpvale", that.tVale.MPvale);
@@ -195,6 +199,14 @@ export default {
       if (da == "ok") {
         this.LimpiarDatos();
       }
+    },
+    AgregarLineaConsumo:function(){
+      this.lista_a_consumir.push({
+            tCodigo: "",
+            tCantidad: "",
+            tDescripcion: "",
+            bFocusCodigoODescripcion: true
+          });
     },
     LimpiarDatos: function () {
       this.tCodigo = "";
@@ -242,7 +254,7 @@ export default {
         .then((response) => response.json())
         .then((resp) => (that.lista_codigos = resp));
     },
-    FiltrarHerramienta: function () {
+    FiltrarHerramienta: function (linea) {
       this.lista_codigos_filtro = [];
       for (let item in this.lista_codigos) {
         let cod = this.lista_codigos[item].Codigo;
@@ -252,9 +264,9 @@ export default {
         if (desc == null) continue;
 
         if (
-          (cod.includes(this.tCodigo.toUpperCase()) || this.tCodigo == "") &&
-          (desc.includes(this.tDescripcion.toUpperCase()) ||
-            this.tDescripcion == "")
+          (cod.includes(linea.tCodigo.toUpperCase()) || linea.tCodigo == "") &&
+          (desc.includes(linea.tDescripcion.toUpperCase()) ||
+            linea.tDescripcion == "")
         ) {
           this.lista_codigos_filtro.push({
             Codigo: this.lista_codigos[item].Codigo,
@@ -269,6 +281,8 @@ export default {
     this.ListarConsumos();
     this.ListarCódigos();
     this.ListarOperarios();
+
+    this.AgregarLineaConsumo();
   },
 };
 </script>

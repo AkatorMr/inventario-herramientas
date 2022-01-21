@@ -53,8 +53,8 @@ EOF;
     
         
         $legajo = $_POST["legajo"];
-        $codigo = $_POST["codigo"];
-        $cantidad = $_POST["cantidad"];
+        $codigo = $_POST["codigo"];//Es un array
+        $cantidad = $_POST["cantidad"];// Es un array
         $vale_oracle= $_POST["valeoracle"];
         $vale_mp= $_POST["mpvale"];
         $ot_mp= $_POST["mpot"];

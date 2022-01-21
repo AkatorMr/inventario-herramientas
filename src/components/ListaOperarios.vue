@@ -1,7 +1,7 @@
 <template>
   <div class="">
     
-      <button @click="ListarOperarios">Click</button>
+      <!-- <button @click="ListarOperarios">Click</button> -->
       
       <table class="table">
   <thead>
