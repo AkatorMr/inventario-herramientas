@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 02-12-2021 a las 20:18:56
+-- Tiempo de generación: 21-01-2022 a las 21:24:04
 -- Versión del servidor: 5.5.20
 -- Versión de PHP: 5.3.9
 
@@ -21,6 +21,119 @@ SET time_zone = "+00:00";
 --
 
 DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CargarSolicitud`(
+    IN f_codigo VARCHAR(14), 
+    IN f_legajo VARCHAR(6),
+    IN f_cantidad int(11),
+    IN f_fecha date,
+    OUT resultado int(11)    
+)
+BEGIN
+    DECLARE l_account_id INT DEFAULT 0;
+    DECLARE l_restante INT DEFAULT 0;
+    DECLARE l_id_to_update INT DEFAULT 0;
+    DECLARE star VARCHAR(50);
+    DECLARE resultado2 VARCHAR(50);
+
+    SET resultado2 = "A";
+    SELECT 10 INTO resultado;
+    SELECT f_cantidad INTO l_restante;
+
+    label_for_loop: LOOP
+        IF l_restante = 0 THEN
+            LEAVE label_for_loop;
+        END IF;
+        START TRANSACTION;
+        
+        -- No hay ningún elemento hay que hacer un insert
+        INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `id_solicitud_compra`)
+        VALUES (f_legajo, f_codigo, f_fecha, 'AGREGAR', '0');
+        -- SET resultado2 = CONCAT(resultado2 , "I");
+    
+        COMMIT;
+        SET resultado2 = CONCAT(resultado2 , "B");
+        SET resultado = resultado - 1;
+        SET l_restante = l_restante - 1;
+    END LOOP; 
+    -- Hacemos un insert en consumos jeje
+    -- INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado)
+    -- VALUES(f_legajo,f_codigo,f_cantidad,f_fecha,'CONSUMIDA');
+    SET resultado2 = CONCAT(resultado2 , "C");
+    SELECT resultado,resultado2;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `for_loop_star`()
+BEGIN
+  DECLARE l_restante INT DEFAULT 0;
+  DECLARE f_output VARCHAR(50);
+  SET l_restante = 1;
+  forloop: LOOP
+    IF l_restante > 5 THEN
+    LEAVE forloop;
+    END IF;
+   SET l_restante = l_restante + 1;
+  END LOOP;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GenerarConsumo`(
+    IN f_codigo VARCHAR(14), 
+    IN f_legajo VARCHAR(6),
+    IN f_cantidad int(11),
+    IN f_fecha date,
+    OUT resultado int(11),
+    OUT resultado2 VARCHAR(100)
+)
+BEGIN
+    DECLARE l_account_id INT DEFAULT 0;
+    DECLARE l_restante INT DEFAULT 0;
+    DECLARE l_id_to_update INT DEFAULT 0;
+    DECLARE star VARCHAR(50);
+  
+    SET star= "*";
+  
+    
+    SELECT 10 INTO resultado;
+    SELECT f_cantidad INTO l_restante;
+    SET resultado2 = "A";
+
+    label_for_loop: LOOP
+        IF l_restante = 0 THEN
+        LEAVE label_for_loop;
+        END IF;
+        START TRANSACTION;
+        SELECT solicitudes.id AS ide INTO l_id_to_update FROM solicitudes
+            INNER JOIN operarios ON solicitudes.legajo_operario = operarios.legajo 
+            WHERE nombre='Almacen' 
+            AND solicitudes.estado = 'DISPONIBLE' 
+            AND solicitudes.cod_herramienta=f_codigo
+            LIMIT 1;
+        SET resultado2 = CONCAT(resultado2 , l_id_to_update);
+        IF l_id_to_update > 0 THEN
+            -- Hay un elemento hay que hacerle un update
+            UPDATE solicitudes SET legajo_operario = f_legajo,estado='CONSUMIDA' WHERE id = l_id_to_update ;
+            SET resultado2 = CONCAT(resultado2 , "U");
+            
+        ELSE
+            -- No hay ningún elemento hay que hacer un insert
+            INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`)
+            VALUES (f_legajo, f_codigo, f_fecha, 'CONSUMIDA', f_fecha, '0', f_fecha);
+            SET resultado2 = CONCAT(resultado2 , "I");
+        END IF;
+        COMMIT;
+        SET resultado2 = CONCAT(resultado2 , "B");
+        SET resultado = resultado - 1;
+        SET l_restante = l_restante - 1;
+    END LOOP; 
+    -- Hacemos un insert en consumos jeje
+    INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado)
+    VALUES(f_legajo,f_codigo,f_cantidad,f_fecha,'CONSUMIDA');
+    SET resultado2 = CONCAT(resultado2 , "C");
+    SELECT resultado,resultado2;
+END$$
+
 --
 -- Funciones
 --
@@ -64,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `consumos` (
   `vale_mp` int(11) DEFAULT NULL,
   `ot_mp` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=68 ;
 
 --
 -- Volcado de datos para la tabla `consumos`
@@ -94,7 +207,7 @@ INSERT INTO `consumos` (`id`, `legajo_operario`, `cod_herramienta`, `fecha_consu
 (39, '512030', '', '2021-09-15', 0, 0, '0000-00-00', '', 'CONSUMIDA', '0000-00-00', 0, '0000-00-00', 0, 0, 0, 0),
 (40, '512030', '', '2021-09-15', 0, 0, '0000-00-00', '', 'CONSUMIDA', '0000-00-00', 0, '0000-00-00', 0, 0, 0, 0),
 (41, '512030', 'PINZA_04_0015', '2021-09-23', 1, 0, '0000-00-00', '', 'CONSUMIDA', '0000-00-00', 0, '0000-00-00', 0, 5265717, 0, 0),
-(56, '502514', 'CINTA_11_0011', '2021-12-02', 1, 0, '0000-00-00', '', 'CONSUMIDA', '0000-00-00', 0, '0000-00-00', 0, 1234, 0, 0);
+(67, '502515', 'CINTA_11_0011', '2021-12-09', 1, 0, '0000-00-00', '', 'CONSUMIDA', '0000-00-00', 0, '0000-00-00', 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -957,14 +1070,14 @@ INSERT INTO `herramientas` (`Codigo`, `Descripcion`, `Precio`, `Consumible`) VAL
 --
 
 CREATE TABLE IF NOT EXISTS `operarios` (
-  `legajo` varchar(6) NOT NULL,
-  `Nombre` varchar(20) NOT NULL,
-  `Apellido` varchar(20) NOT NULL,
-  `Sector` varchar(20) NOT NULL,
+  `legajo` varchar(6) CHARACTER SET latin1 NOT NULL,
+  `Nombre` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `Apellido` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `Sector` varchar(20) CHARACTER SET latin1 NOT NULL,
   `Trabaja` tinyint(1) NOT NULL DEFAULT '1',
   `ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `legajo` (`legajo`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `operarios`
@@ -972,7 +1085,7 @@ CREATE TABLE IF NOT EXISTS `operarios` (
 
 INSERT INTO `operarios` (`legajo`, `Nombre`, `Apellido`, `Sector`, `Trabaja`, `ts`) VALUES
 ('', '', '', '', 1, '2021-09-07 18:35:03'),
-('000000', 'Almacen', 'Almacén', 'Planta 1', 1, '2021-11-30 18:40:25'),
+('000000', 'AlmacÃ©n', 'AlmacÃ©n', 'Planta 1', 1, '2022-01-15 12:28:36'),
 ('502514', 'Marcos', 'Pereson', 'Oficina', 1, '0000-00-00 00:00:00'),
 ('506903', 'AndrÃ©s', 'Gimenez', 'Carretillas', 1, '2021-09-09 10:54:53'),
 ('508511', 'Diego', 'Maglione', 'Taller', 1, '2021-09-07 18:27:30'),
@@ -980,7 +1093,7 @@ INSERT INTO `operarios` (`legajo`, `Nombre`, `Apellido`, `Sector`, `Trabaja`, `t
 ('512023', 'JONATAN', 'GOMEZ', 'Faena', 1, '2021-09-14 17:09:45'),
 ('512030', 'Roberto', 'Prato', 'SuperC', 1, '2021-09-04 13:01:56'),
 ('512050', 'RAÃšL', 'GODEAS', 'Taller', 1, '2021-09-10 15:33:34'),
-('512071', 'Mariano', 'Vicentin', 'Mecánicos Sala de Ma', 1, '2021-09-08 11:55:29');
+('512071', 'Mariano', 'Vicentin', 'Sala de mÃ¡quinas', 1, '2022-01-15 12:36:29');
 
 -- --------------------------------------------------------
 
@@ -999,7 +1112,7 @@ CREATE TABLE IF NOT EXISTS `solicitudes` (
   `id_solicitud_compra` int(11) NOT NULL,
   `fecha_llegada` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='La cantidad de elementos es 1, siembre, lo que se encarga y ' AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='La cantidad de elementos es 1, siembre, lo que se encarga y ' AUTO_INCREMENT=18 ;
 
 --
 -- Volcado de datos para la tabla `solicitudes`
@@ -1007,19 +1120,22 @@ CREATE TABLE IF NOT EXISTS `solicitudes` (
 
 INSERT INTO `solicitudes` (`id`, `legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `nota`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES
 (1, '000000', 'CINTA_11_0011', '2021-11-30', '', 'AGREGAR', '2021-11-30', 15000, '2021-11-30'),
-(2, '502514', 'CINTA_11_0011', '2021-11-25', '', 'CONSUMIDA', '2021-11-30', 0, '2021-11-30'),
-(3, '502514', 'CINTA_11_0011', '2021-11-27', '', 'CONSUMIDA', '2021-11-30', 1, '2021-11-30');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `student`
---
-
-CREATE TABLE IF NOT EXISTS `student` (
-  `FirstName` varchar(50) NOT NULL,
-  `LastName` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+(2, '502515', 'CINTA_11_0011', '2021-11-25', '', 'CONSUMIDA', '2021-11-30', 0, '2021-11-30'),
+(3, '502514', 'CINTA_11_0011', '2021-11-27', '', 'CONSUMIDA', '2021-11-30', 1, '2021-11-30'),
+(4, '502515', 'CINTA_11_0011', '2021-12-09', '', 'CONSUMIDA', '2021-12-09', 0, '2021-12-09'),
+(5, '000000', 'CINTA_11_0011', '2021-12-09', '', 'DISPONIBLE', '2021-12-09', 0, '2021-12-09'),
+(6, '000000', 'CINTA_11_0011', '2021-12-09', '', 'DISPONIBLE', '2021-12-09', 0, '2021-12-09'),
+(7, '502514', 'CINTA_11_0011', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(8, '502514', 'CINTA_11_0011', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(9, '502514', 'CINTA_11_0011', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(10, '502514', 'CINTA_11_0011', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(11, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(12, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(13, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(14, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(15, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(16, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00'),
+(17, '512013', 'MARTIL_11_0001', '2022-01-15', '', 'AGREGAR', '0000-00-00', 0, '0000-00-00');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
