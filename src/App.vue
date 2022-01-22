@@ -2,13 +2,19 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Generar Consumos</router-link> |
-      <router-link to="/solicitud">Agregar solicitud</router-link> |
+      <router-link to="/solicitud"
+        >Agregar solicitud
+        <span>
+          ><router-link to="/solicitud/lista">Lista de solicitudes</router-link>
+        </span>
+      </router-link>
+      |
       <router-link to="/addope">Operarios</router-link> |
       <router-link to="/addsec">Sector</router-link> |
       <router-link to="/addher">Herramientas</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -32,5 +38,13 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+#nav a span{
+  visibility: hidden;
+  display:none;
+}
+#nav a.router-link-active span{
+  visibility: visible;
+  display: inline;
 }
 </style>

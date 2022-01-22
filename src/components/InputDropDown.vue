@@ -62,7 +62,7 @@ export default {
   methods: {
     LimpiarValores:function(){
       this.tInputField="";
-      bFocus=false;
+      this.bFocus=false;
     },
     ActualizarValores: function () {
       this.$emit("onchange", this.tInputField);

@@ -53,8 +53,8 @@ EOF;
     
         
         $legajo = $_POST["legajo"];
-        $codigo = $_POST["codigo"];//Es un array
-        $cantidad = $_POST["cantidad"];// Es un array
+        $a_codigo = $_POST["codigo"];//Es un array
+        $a_cantidad = $_POST["cantidad"];// Es un array
         $vale_oracle= $_POST["valeoracle"];
         $vale_mp= $_POST["mpvale"];
         $ot_mp= $_POST["mpot"];
@@ -66,41 +66,53 @@ EOF;
         //exit();
 
         $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES (\'502514\', \'CINTA_11_0011\', \'2021-11-25\', \'CONSUMIDA\', \'0000-00-00\', \'0\', \'0000-00-00\');";
+        $s = "";
+        $c=true;
+        for($i =0;$i<count($a_codigo);$i++){
+            $codigo = $a_codigo[$i];
+            $cantidad = $a_cantidad[$i];
 
-        //Esto vale oro
-        $sql = "SELECT `solicitudes`.`id` AS ide , `solicitudes`.`cod_herramienta` , `operarios`.`Nombre` FROM `solicitudes`
-        INNER JOIN `operarios` ON `solicitudes`.`legajo_operario` = `operarios`.`legajo` 
-        WHERE `nombre`='Almacen' 
-        AND `solicitudes`.`estado` = 'DISPONIBLE' 
-        AND `solicitudes`.`cod_herramienta`='$codigo' 
-        LIMIT 1;";
-        error_log($sql);
+            //Esto vale oro
+            $sql = "SELECT `solicitudes`.`id` AS ide , `solicitudes`.`cod_herramienta` , `operarios`.`Nombre` FROM `solicitudes`
+            INNER JOIN `operarios` ON `solicitudes`.`legajo_operario` = `operarios`.`legajo` 
+            WHERE `nombre`='Almacen' 
+            AND `solicitudes`.`estado` = 'DISPONIBLE' 
+            AND `solicitudes`.`cod_herramienta`='$codigo' 
+            LIMIT 1;";
+            error_log($sql);
 
-        //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
-        // deberia cambiar la tabla y poner que sea con cantidad y no por unidad
-        $res = $mysqli->query($sql);
-        //print_r($res);
-        //echo $res->num_rows;
-        if($res->num_rows>0){
-            //Hacer un update 
-            //echo "Realiza un update";
-            $row = $res->fetch_assoc();
-            $ide = $row['ide'];
+            //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
+            // deberia cambiar la tabla y poner que sea con cantidad y no por unidad
+            $res = $mysqli->query($sql);
+            //print_r($res);
+            //echo $res->num_rows;
+            if($res->num_rows>0){
+                //Hacer un update 
+                //echo "Realiza un update";
+                $row = $res->fetch_assoc();
+                $ide = $row['ide'];
 
-            $sql = "UPDATE `solicitudes` SET `legajo_operario` = '$legajo',`estado`='CONSUMIDA' WHERE `id`='$ide';";
-            
-        }else{
-            //Hacer un insert de la solicitud
-            $sql = "INSERT INTO `solicitudes` (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_consumo', 'CONSUMIDA', '$fecha_consumo', \'0\', '$fecha_consumo');";
-            
+                $sql = "UPDATE `solicitudes` SET `legajo_operario` = '$legajo',`estado`='CONSUMIDA' WHERE `id`='$ide';";
+                
+            }else{
+                //Hacer un insert de la solicitud
+                $sql = "INSERT INTO `solicitudes` (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_consumo', 'CONSUMIDA', '$fecha_consumo', '0', '$fecha_consumo');";
+                
 
-        }
-        if(IN($sql))
-            if(IN("INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle','$vale_mp','$ot_mp')")){
-                echo json_encode("ok");
-                exit();
             }
-
+            if(IN($sql))
+                if(IN("INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle','$vale_mp','$ot_mp')")){
+                    $c= true;
+                    $s.="1";
+                    continue;
+                }
+            $c=false;
+            $s=$sql;
+        }
+        if($c){
+            echo json_encode("ok");
+            exit();
+        }
         echo json_encode("error");
         die();
     }else if(strpos($comando,"NuevaSolicitud")!==FALSE){

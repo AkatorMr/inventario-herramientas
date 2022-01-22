@@ -6,6 +6,7 @@ import AgregarOperario from '../views/CargarOperario.vue'
 import viewSectores from "../views/viewSector.vue"
 import AgregarHerramienta from "../views/CargarHerramientas.vue"
 import viewSolicitud from "../views/viewSolicitud.vue"
+import viewListaSolicitud from "../views/viewListaSolicitud.vue"
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,7 @@ const routes = [
     component: viewConsumo
   },
   {path:'/solicitud',name:'Solicitud',component:viewSolicitud},
+  {path:'/solicitud/lista',name:'ListaSolicitud',component:viewListaSolicitud},
   {
     path: '/addope',
     name: 'Add-Operario',

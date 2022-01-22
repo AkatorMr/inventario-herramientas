@@ -172,7 +172,7 @@ export default {
       var formData = new FormData();
       formData.append("legajo", legajo);
 
-      for(index in this.lista_a_consumir){
+      for(let index in this.lista_a_consumir){
         formData.append("codigo["+index+"]", that.lista_a_consumir[index].tCodigo);
         formData.append("cantidad["+index+"]", that.lista_a_consumir[index].tCantidad);
       }
@@ -216,7 +216,9 @@ export default {
       this.tVale.Oracle = null;
       this.tVale.MPvale = null;
       this.tVale.MPot = null;
-      this.$refs.ref_operario.LimpiarDatos();
+      this.lista_a_consumir = [];
+      this.AgregarLineaConsumo();
+      this.$refs.ref_operario.LimpiarValores();
     },
     ListarConsumos: function () {
       let that = this;
