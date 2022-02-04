@@ -2,6 +2,7 @@
     include "conexion.php";
     $comando = (array_keys($_GET));
     if(count($comando)==0)exit();
+    $sub_comando = $_GET['nivel'];
     $comando = $comando[0];
 
     
@@ -27,6 +28,14 @@
     }else if(strpos($comando,"ListarSectores")!==FALSE){
     
         SF("SELECT DISTINCT `Sector` FROM `operarios`");
+        exit();
+    }else if(strpos($comando,"ListarSolicitudes")!==FALSE){
+        $inicio = $sub_comando*6;
+        SF("SELECT o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, s.estado 
+FROM `solicitudes` s
+INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)
+WHERE s.estado != 'CONSUMIDA' ORDER BY o.Legajo LIMIT $inicio,6;
+        ");
         exit();
     }else if(strpos($comando,"ListarConsumos")!==FALSE){
     
@@ -136,6 +145,36 @@ EOF;
         //print_r($res);
         //echo $res->num_rows;
         if($res->num_rows>0){
+            echo json_encode("ok");
+            exit();   
+
+        }
+        
+        echo json_encode("error");
+        die();
+    }else if(strpos($comando,"AgregarCodigo")!==FALSE){
+    
+        
+        
+        $codigo = $_POST["codigo"];
+        $descripcion = $_POST["descripcion"];
+        
+        //include "editar.xlsx.php";
+
+        //$fecha_solicitud = date("Y-m-d");
+        //echo json_encode($fecha_consumo);
+        //exit();
+        
+        $sql = "INSERT INTO herramientas (`Codigo`, `Descripcion`) VALUES ('$codigo', '$descripcion');";
+        //echo $sql;
+        //$sql = "CALL cargarSolicitud('$codigo','$legajo',$cantidad,'$fecha_solicitud',@SALIDA);";
+        //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
+        // deberia cambiar la tabla y poner que sea con cantidad y no por unidad
+        //$res = $mysqli->query($sql);
+        //print_r($res);
+        //echo $res->num_rows;
+        //if($res->num_rows>0){
+        if(IN($sql)){
             echo json_encode("ok");
             exit();   
 

@@ -5,19 +5,20 @@
         <tr>
           <th scope="col">Legajo</th>
           <th scope="col">Nombre</th>
-          <th scope="col">Apellido</th>
-          <th scope="col">Sector</th>
+          <th scope="col">Código</th>
+          <th scope="col">Estado</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(a, key) of lista_solicitudes" :key="key">
-          <th scope="row">{{ a.legajo }}</th>
-          <td>{{ a.Nombre }}</td>
-          <td>{{ a.Apellido }}</td>
-          <td>{{ a.Sector }}</td>
+          <th scope="row">{{ a.Legajo }}</th>
+          <td>{{ a.full_name }}</td>
+          <td>{{ a.cod_herramienta }}</td>
+          <td>{{ a.estado }}</td>
         </tr>
       </tbody>
     </table>
+    <button class="btn bt-outline-primary" @click="SiguienteNivel">Siguiente</button>
   </div>
 </template>
 
@@ -36,12 +37,18 @@ export default {
       lista_solicitudes_filtro: [],
       bMuro: false,
       bFocusSector: false,
+      nivel:1
     };
   },
   methods: {
+    SiguienteNivel: function(){
+      this.nivel++;
+      this.ListarSolicitudes();
+    },
     ListarSolicitudes: function () {
       let that = this;
-      fetch("/api/index.php?ListarSolicitudes")
+      console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel-1));
+      fetch("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel-1))
         .then((response) => response.json())
         .then((resp) => (that.lista_solicitudes = resp));
     },

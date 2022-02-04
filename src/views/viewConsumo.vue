@@ -71,7 +71,7 @@
         />
         <button
           v-if="lista_codigos_filtro.length == 0"
-          @click="AgregarHerramientaFaltante"
+          @click="AgregarHerramientaFaltante(a)"
           :class="
             'btn btn-' +
             (AgregarDo == 'Agregar Código' ? 'outline-info' : 'success') +
@@ -157,8 +157,30 @@ export default {
   },
 
   methods: {
-    AgregarHerramientaFaltante: function () {
-      this.AgregarDo = "Agregado";
+    AgregarHerramientaFaltante: function (a) {
+      //this.AgregarDo = "Agregado";
+      console.log(a);
+      
+      this.bMuroDeCarga = true;
+      let that = this;
+      let codigo = a.tCodigo;
+      let descri = a.tDescripcion;
+
+      var formData = new FormData();
+      formData.append("codigo", codigo);
+      formData.append("descripcion", descri);
+      
+      console.log(formData);
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+
+      // send POST request
+      fetch("/api/index.php?AgregarCodigo", options)
+        .then((res) => res.json())
+        .then((res) => that.DatosRecibidos(res));
+
     },
 
     GenerarConsumo: function () {
