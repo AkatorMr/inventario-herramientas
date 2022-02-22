@@ -70,7 +70,7 @@
           type="number"
         />
         <button
-          v-if="lista_codigos_filtro.length == 0"
+          v-if="lista_codigos_filtro.length == 0 && (a.tCodigo !='' || a.tDescripcion!='')"
           @click="AgregarHerramientaFaltante(a)"
           :class="
             'btn btn-' +
@@ -179,7 +179,20 @@ export default {
       // send POST request
       fetch("/api/index.php?AgregarCodigo", options)
         .then((res) => res.json())
-        .then((res) => that.DatosRecibidos(res));
+        .then((res) => that.HandlerHerramientaFaltante(res,a));
+
+    },
+
+    LanzarNotificacion:function(text){
+      console.log(text);
+    },
+    HandlerHerramientaFaltante: function(da,a){
+      this.bMuroDeCarga = false;
+      if(da == "ok"){
+        this.LanzarNotificacion("El elemento " + a.tCodigo + " se a agregado!");
+      }else if(da == "ac"){
+        this.LanzarNotificacion("El elemento " + a.tCodigo + " se a actualizado!");
+      }
 
     },
 

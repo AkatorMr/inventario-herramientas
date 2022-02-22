@@ -2,7 +2,10 @@
     include "conexion.php";
     $comando = (array_keys($_GET));
     if(count($comando)==0)exit();
-    $sub_comando = $_GET['nivel'];
+    $sub_comando="";
+    if(isset($_GET['nivel']))
+        $sub_comando = $_GET['nivel'];
+
     $comando = $comando[0];
 
     
@@ -154,8 +157,6 @@ EOF;
         die();
     }else if(strpos($comando,"AgregarCodigo")!==FALSE){
     
-        
-        
         $codigo = $_POST["codigo"];
         $descripcion = $_POST["descripcion"];
         
@@ -164,8 +165,9 @@ EOF;
         //$fecha_solicitud = date("Y-m-d");
         //echo json_encode($fecha_consumo);
         //exit();
-        
-        $sql = "INSERT INTO herramientas (`Codigo`, `Descripcion`) VALUES ('$codigo', '$descripcion');";
+        $sql = "SELECT `Codigo` FROM herramientas WHERE `Codigo`='$codigo'";
+        $res = $mysqli->query($sql);
+
         //echo $sql;
         //$sql = "CALL cargarSolicitud('$codigo','$legajo',$cantidad,'$fecha_solicitud',@SALIDA);";
         //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
@@ -173,11 +175,18 @@ EOF;
         //$res = $mysqli->query($sql);
         //print_r($res);
         //echo $res->num_rows;
-        //if($res->num_rows>0){
-        if(IN($sql)){
-            echo json_encode("ok");
-            exit();   
-
+        if($res->num_rows==0){
+            $sql = "INSERT INTO herramientas (`Codigo`, `Descripcion`) VALUES ('$codigo', '$descripcion');";
+            if(IN($sql)){
+                echo json_encode("ok");
+                exit();
+            }
+        }else{
+            $sql = $sql = "UPDATE `herramientas` SET `Descripcion` = '$descripcion' WHERE `Codigo`='$codigo';";
+            if(IN($sql)){
+                echo json_encode("ac");
+                exit();
+            }
         }
         
         echo json_encode("error");
