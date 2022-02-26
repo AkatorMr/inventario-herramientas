@@ -80,6 +80,25 @@
         type="number"
       />
     </div>
+
+    <div class="input-group mb-3">
+      <span class="input-group-text col-md-1">Fecha:</span>
+      <input
+        type="date"
+        class="form-control col-md-1"
+        placeholder="dd/mm/yyyy"
+        aria-label="Fecha"
+        v-model="tFecha"
+      />
+<span class="input-group-text col-md-2">Nro Solicitud:</span>
+      <input
+        type="number"
+        class="form-control col-md-1"
+        placeholder="##"
+  
+        v-model="tNroSolicitud"
+      />
+    </div>
     <button class="btn btn-outline-primary" @click="CargarSolicitud()">
       Cargar Solicitud
     </button>
@@ -103,8 +122,9 @@ export default {
       bFocusCodigoODescripcion: true,
       tCodigo: "",
       tCantidad: "",
-       
+       tFecha:"",
       tDescripcion: "",
+      tNroSolicitud:0
 
     }
   },
@@ -127,7 +147,10 @@ export default {
       formData.append("legajo", legajo);
       formData.append("codigo", that.tCodigo);
       formData.append("cantidad", that.tCantidad);
-      console.log(formData);
+      formData.append("fecha",that.tFecha);
+      formData.append("nro_solicitud",that.tNroSolicitud);
+      
+      console.log(this.tNroSolicitud);
       //formData.append("nombre", that.op_nombre);
       //formData.append("sector", that.op_sector);
       // request options

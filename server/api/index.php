@@ -34,9 +34,10 @@
         exit();
     }else if(strpos($comando,"ListarSolicitudes")!==FALSE){
         $inicio = $sub_comando*6;
-        SF("SELECT o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, s.estado 
+        SF("SELECT o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
 FROM `solicitudes` s
 INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)
+INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)
 WHERE s.estado != 'CONSUMIDA' ORDER BY o.Legajo LIMIT $inicio,6;
         ");
         exit();
@@ -133,14 +134,21 @@ EOF;
         $legajo = $_POST["legajo"];
         $codigo = $_POST["codigo"];
         $cantidad = $_POST["cantidad"];
+        $fecha = $_POST["fecha"];
+        $nro_solicitud = $_POST["nro_solicitud"];
         
         //include "editar.xlsx.php";
-
         $fecha_solicitud = date("Y-m-d");
+        //echo "p".$nro_solicitud."p";
+
+        if(!empty($fecha))
+            $fecha_solicitud = $fecha;
         //echo json_encode($fecha_consumo);
         //exit();
-
-        $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_solicitud', \'AGREGAR\', \'0000-00-00\', \'0\', \'0000-00-00\');";
+        $estado = "AGREGAR";
+        if($nro_solicitud!="0")
+            $estado = "LISTA";
+        $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_solicitud', \'$estado\', \'0000-00-00\', \'$nro_solicitud\', \'0000-00-00\');";
         $sql = "CALL cargarSolicitud('$codigo','$legajo',$cantidad,'$fecha_solicitud',@SALIDA);";
         //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
         // deberia cambiar la tabla y poner que sea con cantidad y no por unidad

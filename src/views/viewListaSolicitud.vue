@@ -6,7 +6,9 @@
           <th scope="col">Legajo</th>
           <th scope="col">Nombre</th>
           <th scope="col">Código</th>
+          <th scope="col">Descripción</th>
           <th scope="col">Estado</th>
+          <th scope="col">Comandos</th>
         </tr>
       </thead>
       <tbody>
@@ -14,19 +16,47 @@
           <th scope="row">{{ a.Legajo }}</th>
           <td>{{ a.full_name }}</td>
           <td>{{ a.cod_herramienta }}</td>
-          <td>{{ a.estado }}</td>
+          <td>{{ a.Descripcion }}</td>
+          <td>
+            
+            
+
+            {{ a.estado }}
+          </td>
+          <td>
+            <select class="form-select mb-6" aria-label="" v-on:change="alCambiar" v-model="Accionar"> 
+              <option
+                v-for="(item, index) in [
+                  'LISTA',
+                  'PERDIDA',
+                  'CARGADO',
+                  'DISPONIBLE',
+                  'LLEGO',
+                  'GENERAR',
+                  'AGREGAR',
+                  'CONSUMIDA',
+                ]"
+                :key="index"
+                :selected="(item==a.estado)?(Accionar=a.estado):false"
+              >{{item}}</option>
+            </select>
+          </td>
         </tr>
       </tbody>
     </table>
-    <button class="btn bt-outline-primary" @click="SiguienteNivel">Siguiente</button>
+    <button class="btn bt-outline-primary" @click="AnteriorNivel" v-if="nivel>1">
+      Anterior
+    </button>
+    <button class="btn bt-outline-primary" @click="SiguienteNivel">
+      Siguiente
+    </button>
   </div>
 </template>
 
 <script>
 export default {
   name: "CargarOperarios",
-  components: {
-  },
+  components: {},
   data() {
     return {
       op_legajo: "",
@@ -37,20 +67,29 @@ export default {
       lista_solicitudes_filtro: [],
       bMuro: false,
       bFocusSector: false,
-      nivel:1
+      nivel: 1,
+      Accionar:""
     };
   },
   methods: {
-    SiguienteNivel: function(){
+    alCambiar:function(){
+console.log(this.Accionar);
+    },
+    
+    AnteriorNivel:function(){
+      this.nivel--;
+      this.ListarSolicitudes();
+    },
+    SiguienteNivel: function () {
       this.nivel++;
       this.ListarSolicitudes();
     },
     ListarSolicitudes: function () {
       let that = this;
-      console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel-1));
-      fetch("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel-1))
+      console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1));
+      fetch("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1))
         .then((response) => response.json())
-        .then((resp) => (that.lista_solicitudes = resp));
+        .then((resp) => {/* console.log(resp); */ that.lista_solicitudes = resp;});
     },
     FiltrarSector: function () {
       this.lista_sectores_filtro = [];
@@ -93,7 +132,6 @@ export default {
   },
   mounted() {
     this.ListarSolicitudes();
-    
   },
 };
 </script>
