@@ -44,7 +44,7 @@ WHERE s.estado != 'CONSUMIDA' ORDER BY o.Legajo LIMIT $inicio,6;
     }else if(strpos($comando,"ListarConsumos")!==FALSE){
     
         $sql=<<<EOF
-SELECT herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido
+SELECT herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido
 FROM `consumos` con
 INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)
 INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo;

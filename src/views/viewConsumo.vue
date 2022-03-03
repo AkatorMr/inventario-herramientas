@@ -125,10 +125,15 @@
       Generar Consumo
     </button>
 
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item" v-for="(a, key) of lista_consumos" :key="key">
-        {{ a.Sector }}
+    <ul class="container">
+      <template v-for="(a, key) of lista_consumos" >
+      <li class="row mb-5" :key="key">
+        <div class="col col-md-2">{{ a.Nombre + ' ' + a.Apellido }}</div>
+        <div class="col col-md-2">{{ a.Codigo }}</div>
+        <div class="col col-md-7">{{ a.Descripcion }}</div>
+        
       </li>
+      </template>
     </ul>
   </div>
 </template>
@@ -258,10 +263,12 @@ export default {
     ListarConsumos: function () {
       let that = this;
       fetch("/api/index.php?ListarConsumos")
-        .then((response) => response.text())
-        .then((resp) =>
+        .then((response) => response.json())
+        .then((resp) =>{
           //that.lista_operarios = resp
-          console.log(resp)
+          that.lista_consumos = resp;
+          //console.log(resp);
+          }
         );
     },
     ListarOperarios: function () {

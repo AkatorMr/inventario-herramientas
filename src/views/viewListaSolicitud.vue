@@ -44,7 +44,7 @@
         </tr>
       </tbody>
     </table>
-    <button class="btn bt-outline-primary" @click="AnteriorNivel" v-if="nivel>1">
+    <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="(nivel<2)">
       Anterior
     </button>
     <button class="btn bt-outline-primary" @click="SiguienteNivel">
