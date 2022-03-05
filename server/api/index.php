@@ -34,7 +34,7 @@
         exit();
     }else if(strpos($comando,"ListarSolicitudes")!==FALSE){
         $inicio = $sub_comando*6;
-        SF("SELECT o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
+        SF("SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
 FROM `solicitudes` s
 INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)
 INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)
@@ -43,18 +43,16 @@ WHERE s.estado != 'CONSUMIDA' ORDER BY o.Legajo LIMIT $inicio,6;
         exit();
     }else if(strpos($comando,"ListarConsumos")!==FALSE){
     
-        $sql=<<<EOF
-SELECT herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido
-FROM `consumos` con
-INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)
-INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo;
-EOF;
+        $sql="SELECT herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido";
+        $sql.=" FROM `consumos` con";
+        $sql.=" INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
+        $sql.=" INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo;";
 
-$sql2=<<<EOF
-SELECT h.Descripcion AS Descripcion, o.Nombre AS Nombre, o.Apellido AS Apellido
-FROM `consumos` con, `herramientas` h, `operarios` o
-WHERE con.cod_herramienta = h.Codigo AND con.legajo_operario = o.legajo;
-EOF;
+
+        $sql2="SELECT h.Descripcion AS Descripcion, o.Nombre AS Nombre, o.Apellido AS Apellido";
+        $sql2.=" FROM `consumos` con, `herramientas` h, `operarios` o";
+        $sql2.=" WHERE con.cod_herramienta = h.Codigo AND con.legajo_operario = o.legajo;";
+        
         SF($sql);
         exit();
     }else if(strpos($comando,"ListarCodigos")!==FALSE){
@@ -146,10 +144,15 @@ EOF;
         //echo json_encode($fecha_consumo);
         //exit();
         $estado = "AGREGAR";
-        if($nro_solicitud!="0")
-            $estado = "LISTA";
+        
         $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_solicitud', \'$estado\', \'0000-00-00\', \'$nro_solicitud\', \'0000-00-00\');";
         $sql = "CALL cargarSolicitud('$codigo','$legajo',$cantidad,'$fecha_solicitud',@SALIDA);";
+
+        if($nro_solicitud!="0"){
+            $estado = "LISTA";
+            $sql = "CALL CargarSolicitudPrevia('$codigo','$legajo',$cantidad,'$fecha_solicitud','$estado','$nro_solicitud',@SALIDA);";
+        }
+        
         //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
         // deberia cambiar la tabla y poner que sea con cantidad y no por unidad
         $res = $mysqli->query($sql);
@@ -196,6 +199,22 @@ EOF;
                 exit();
             }
         }
+        
+        echo json_encode("error");
+        die();
+    }else if(strpos($comando,"ActualizarSolicitud")!==FALSE){
+    
+        $id_sol = $_POST["id_sol"];
+        $estado = $_POST["estado"];
+        $nro_solicitud = $_POST["nro_solicitud"];
+        
+        
+        $sql = $sql = "UPDATE `solicitudes` SET `estado` = '$estado', `id_solicitud_compra` = '$nro_solicitud' WHERE `id`='$id_sol';";
+        if(IN($sql)){
+            echo json_encode("ac");
+            exit();
+        }
+        
         
         echo json_encode("error");
         die();

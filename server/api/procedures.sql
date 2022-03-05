@@ -1,3 +1,52 @@
+DROP PROCEDURE IF EXISTS CargarSolicitudPrevia;
+DELIMITER $$
+
+CREATE PROCEDURE CargarSolicitudPrevia(
+    IN f_codigo VARCHAR(14), 
+    IN f_legajo VARCHAR(6),
+    IN f_cantidad int(11),
+    IN f_fecha date,
+    IN f_estado VARCHAR(10),
+    IN f_nro_solicitud int(11),
+    OUT resultado int(11)    
+)
+BEGIN
+    DECLARE l_account_id INT DEFAULT 0;
+    DECLARE l_restante INT DEFAULT 0;
+    DECLARE l_id_to_update INT DEFAULT 0;
+    DECLARE star VARCHAR(50);
+    DECLARE resultado2 VARCHAR(50);
+
+    SET resultado2 = "A";
+    SELECT 10 INTO resultado;
+    SELECT f_cantidad INTO l_restante;
+
+    label_for_loop: LOOP
+        IF l_restante = 0 THEN
+            LEAVE label_for_loop;
+        END IF;
+        START TRANSACTION;
+        
+        -- No hay ningún elemento hay que hacer un insert
+        INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `id_solicitud_compra`)
+        VALUES (f_legajo, f_codigo, f_fecha, f_estado, f_nro_solicitud);
+        -- SET resultado2 = CONCAT(resultado2 , "I");
+    
+        COMMIT;
+        SET resultado2 = CONCAT(resultado2 , "B");
+        SET resultado = resultado - 1;
+        SET l_restante = l_restante - 1;
+    END LOOP; 
+    -- Hacemos un insert en consumos jeje
+    -- INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado)
+    -- VALUES(f_legajo,f_codigo,f_cantidad,f_fecha,'CONSUMIDA');
+    SET resultado2 = CONCAT(resultado2 , "C");
+    SELECT resultado,resultado2;
+END$$
+
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS CargarSolicitud;
 DELIMITER $$
 

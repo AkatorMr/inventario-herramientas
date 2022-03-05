@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="MuroDeCarga" v-if="bIngresoDatos"></div>
     <table class="table">
       <thead>
         <tr>
@@ -24,7 +25,7 @@
             {{ a.estado }}
           </td>
           <td>
-            <select class="form-select mb-6" aria-label="" v-on:change="alCambiar" v-model="Accionar"> 
+            <select class="form-select mb-6" aria-label="" @change="alCambiar($event,a.id)" > 
               <option
                 v-for="(item, index) in [
                   'LISTA',
@@ -37,7 +38,7 @@
                   'CONSUMIDA',
                 ]"
                 :key="index"
-                :selected="(item==a.estado)?(Accionar=a.estado):false"
+                :selected="item==a.estado"
               >{{item}}</option>
             </select>
           </td>
@@ -68,12 +69,37 @@ export default {
       bMuro: false,
       bFocusSector: false,
       nivel: 1,
-      Accionar:""
+      Accionar:"",
+      bIngresoDatos:false
     };
   },
   methods: {
-    alCambiar:function(){
-console.log(this.Accionar);
+    alCambiar:function(event,id_sol){
+      console.log(event.target.value,id_sol);
+      
+
+      this.bIngresoDatos = true;
+      return;
+      
+      let that = this;
+
+      var formData = new FormData();
+      formData.append("legajo", that.op_legajo);
+      formData.append("apellido", that.op_apellido);
+      formData.append("nombre", that.op_nombre);
+      formData.append("sector", that.op_sector);
+      // request options
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+
+      // send POST request
+      fetch("/api/index.php?InsertarOperario", options)
+        .then((res) => res.text())
+        .then((res) => that.DatosRecibidos(res));
+
+
     },
     
     AnteriorNivel:function(){
@@ -146,4 +172,15 @@ console.log(this.Accionar);
   background-color: rgba(0, 102, 128, 0.527);
   z-index: 99999;
 }
+
+.MuroDeCarga {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background-color: rgba(0, 102, 128, 0.527);
+  z-index: 99999;
+}
+
 </style>
