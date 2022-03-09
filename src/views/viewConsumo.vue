@@ -125,16 +125,7 @@
       Generar Consumo
     </button>
 
-    <ul class="container">
-      <template v-for="(a, key) of lista_consumos" >
-      <li class="row mb-5" :key="key">
-        <div class="col col-md-2">{{ a.Nombre + ' ' + a.Apellido }}</div>
-        <div class="col col-md-2">{{ a.Codigo }}</div>
-        <div class="col col-md-7">{{ a.Descripcion }}</div>
-        
-      </li>
-      </template>
-    </ul>
+    
   </div>
 </template>
 
@@ -145,7 +136,6 @@ export default {
   components: { InputDropDown },
   data() {
     return {
-      lista_consumos: [],
       lista_codigos: [],
       lista_codigos_filtro: [],
       lista_operarios: [],
@@ -260,17 +250,7 @@ export default {
       this.AgregarLineaConsumo();
       this.$refs.ref_operario.LimpiarValores();
     },
-    ListarConsumos: function () {
-      let that = this;
-      fetch("/api/index.php?ListarConsumos")
-        .then((response) => response.json())
-        .then((resp) =>{
-          //that.lista_operarios = resp
-          that.lista_consumos = resp;
-          //console.log(resp);
-          }
-        );
-    },
+    
     ListarOperarios: function () {
       let that = this;
       fetch("/api/index.php?ListarOperarios")
@@ -322,7 +302,7 @@ export default {
     },
   },
   mounted() {
-    this.ListarConsumos();
+    
     this.ListarCódigos();
     this.ListarOperarios();
 

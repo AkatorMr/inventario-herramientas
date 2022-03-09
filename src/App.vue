@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Generar Consumos</router-link> |
+      <router-link to="/consumos">Generar Consumos
+      <span>
+          ><router-link to="/consumos/lista">Listar Consumos</router-link>
+        </span>
+        </router-link> |
       <router-link to="/solicitud"
         >Agregar solicitud
         <span>

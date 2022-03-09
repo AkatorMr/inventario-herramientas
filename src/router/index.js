@@ -7,6 +7,7 @@ import viewSectores from "../views/viewSector.vue"
 import AgregarHerramienta from "../views/CargarHerramientas.vue"
 import viewSolicitud from "../views/viewSolicitud.vue"
 import viewListaSolicitud from "../views/viewListaSolicitud.vue"
+import viewListaConsumo from "../views/viewListaConsumos.vue"
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,16 @@ const routes = [
     path: '/',
     name: 'Generar Consumo',
     component: viewConsumo
+  },
+  {
+    path: '/consumos',
+    name: 'Generar Consumo',
+    component: viewConsumo
+  },
+  {
+    path: '/consumos/lista',
+    name: 'Listar Consumos',
+    component: viewListaConsumo
   },
   {path:'/solicitud',name:'Solicitud',component:viewSolicitud},
   {path:'/solicitud/lista',name:'ListaSolicitud',component:viewListaSolicitud},

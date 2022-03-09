@@ -43,11 +43,25 @@ WHERE s.estado != 'CONSUMIDA' ORDER BY o.Legajo LIMIT $inicio,6;
         exit();
     }else if(strpos($comando,"ListarConsumos")!==FALSE){
     
-        $sql="SELECT herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido";
+        $legajo = $_POST["legajo"];
+        $codigo = $_POST["codigo"];
+        $nombre = $_POST["nombre"];
+        $descripcion = $_POST["descripcion"];
+
+
+        $inicio = $sub_comando*15;
+        $sql="SELECT operarios.Legajo, herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido";
         $sql.=" FROM `consumos` con";
         $sql.=" INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
-        $sql.=" INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo;";
+        $sql.=" INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo";
+        $sql.=" WHERE herramientas.Codigo LIKE '%$codigo%'";
+        $sql.=" AND herramientas.Descripcion LIKE '%$descripcion%'";
+        $sql.=" AND operarios.Legajo LIKE '%$legajo%'";
+        $sql.=" AND (operarios.Nombre LIKE '%$nombre%'";
+        $sql.=" OR operarios.Apellido LIKE '%$nombre%')";
+        $sql.=" ORDER BY operarios.Legajo, herramientas.Codigo LIMIT $inicio,15;";
 
+        //echo $sql;
 
         $sql2="SELECT h.Descripcion AS Descripcion, o.Nombre AS Nombre, o.Apellido AS Apellido";
         $sql2.=" FROM `consumos` con, `herramientas` h, `operarios` o";
