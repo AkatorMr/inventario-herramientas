@@ -1,7 +1,10 @@
 <?php
     include "conexion.php";
     $comando = (array_keys($_GET));
-    if(count($comando)==0)exit();
+
+    if(count($comando)==0)
+        exit();
+        
     $sub_comando="";
     if(isset($_GET['nivel']))
         $sub_comando = $_GET['nivel'];
@@ -33,6 +36,10 @@
         SF("SELECT DISTINCT `Sector` FROM `operarios`");
         exit();
     }else if(strpos($comando,"ListarSolicitudes")!==FALSE){
+        if(!is_numeric($sub_comando)){
+            echo json_encode("error");
+            exit();
+        }
         $inicio = $sub_comando*6;
         SF("SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
 FROM `solicitudes` s
