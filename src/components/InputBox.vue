@@ -20,7 +20,7 @@ export default {
   name: 'ListaOperarios',
   props: {
     Titulo: String,
-    
+    Default:String,
   },
   data() {
     return {
@@ -43,6 +43,7 @@ export default {
   },
   mounted() {
     this.ListarOperarios();
+    this.valorentrada=this.Default;
   },
 }
 </script>

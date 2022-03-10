@@ -4,6 +4,7 @@
     <InputBox
       v-if="bShowInputBox"
       :Titulo="'Legajo'"
+      :Default="valoramostrar"
       @Listo="Resultado"
     ></InputBox>
     <table class="table">
@@ -12,19 +13,27 @@
           <th scope="col">Nro</th>
           <th scope="col">
             <span>Legajo</span>
-            <div @click="Filtro('Legajo')">{{(filtro_legajo=="")?'#######':filtro_legajo}} </div>
+            <div @click="Filtro('Legajo')">
+              {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
+            </div>
           </th>
           <th scope="col">
             <span>Nombre y Apellido</span>
-            <div @click="Filtro('Nombre')">{{(filtro_nombre=="")?'#######':filtro_nombre}}</div>
+            <div @click="Filtro('Nombre')">
+              {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
+            </div>
           </th>
           <th scope="col">
             <span>Código</span>
-            <div @click="Filtro('Codigo')">{{(filtro_codigo=="")?'#######':filtro_codigo}}</div>
+            <div @click="Filtro('Codigo')">
+              {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
+            </div>
           </th>
           <th scope="col">
             <span>Descripción</span>
-            <div @click="Filtro('Descripcion')">{{(filtro_descripcion=="")?'#######':filtro_descripcion}}</div>
+            <div @click="Filtro('Descripcion')">
+              {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
+            </div>
           </th>
         </tr>
       </thead>
@@ -75,6 +84,7 @@ export default {
       filtro_nombre: "",
       filtro_codigo: "",
       filtro_descripcion: "",
+      valoramostrar: "",
     };
   },
   methods: {
@@ -103,6 +113,25 @@ export default {
     },
     Filtro: function (columna) {
       this.sColumna = columna;
+      switch (this.sColumna) {
+        case "Legajo":
+          this.valoramostrar = this.filtro_legajo ;
+          
+          break;
+        case "Nombre":
+          this.valoramostrar = this.filtro_nombre ;
+          
+          break;
+        case "Codigo":
+          this.valoramostrar = this.filtro_codigo ;
+          
+          break;
+        case "Descripcion":
+          this.valoramostrar = this.filtro_descripcion ;
+          
+          break;
+      }
+
       this.bShowInputBox = true;
     },
     ListarConsumos: function () {
@@ -110,7 +139,6 @@ export default {
       //console.log("/api/index.php?ListarConsumos&nivel=" + (this.nivel - 1));
 
       var formData = new FormData();
-      
 
       formData.append("legajo", that.filtro_legajo);
       formData.append("codigo", that.filtro_codigo);

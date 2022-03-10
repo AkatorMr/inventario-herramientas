@@ -8,6 +8,7 @@ import AgregarHerramienta from "../views/CargarHerramientas.vue"
 import viewSolicitud from "../views/viewSolicitud.vue"
 import viewListaSolicitud from "../views/viewListaSolicitud.vue"
 import viewListaConsumo from "../views/viewListaConsumos.vue"
+import viewPruebas from "../views/viewPruebas.vue"
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const routes = [
     path: '/',
     name: 'Generar Consumo',
     component: viewConsumo
+  },
+  {
+    path: '/prueba',
+    name: 'Generar s',
+    component: viewPruebas
   },
   {
     path: '/consumos',
