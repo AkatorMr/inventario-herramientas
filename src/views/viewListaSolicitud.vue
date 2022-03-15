@@ -1,13 +1,40 @@
 <template>
   <div class="container">
     <div class="MuroDeCarga" v-if="bIngresoDatos"></div>
+    <InputBox
+      v-if="bShowInputBox"
+      :Titulo="'Legajo'"
+      :Default="valoramostrar"
+      @Listo="Resultado"
+    ></InputBox>
+
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Legajo</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Código</th>
-          <th scope="col">Descripción</th>
+          <th scope="col">
+            Legajo
+            <div @click="Filtro('Legajo')">
+              {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
+            </div>
+          </th>
+          <th scope="col">
+            Nombre y Apellido
+            <div @click="Filtro('Nombre')">
+              {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
+            </div>
+          </th>
+          <th scope="col">
+            Código
+            <div @click="Filtro('Codigo')">
+              {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
+            </div>
+          </th>
+          <th scope="col">
+            Descripción
+            <div @click="Filtro('Descripcion')">
+              {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
+            </div>
+          </th>
           <th scope="col">Estado</th>
           <th scope="col">Comandos</th>
         </tr>
@@ -19,13 +46,14 @@
           <td>{{ a.cod_herramienta }}</td>
           <td>{{ a.Descripcion }}</td>
           <td>
-            
-            
-
             {{ a.estado }}
           </td>
           <td>
-            <select class="form-select mb-6" aria-label="" @change="alCambiar($event,a.id)" > 
+            <select
+              class="form-select mb-6"
+              aria-label=""
+              @change="alCambiar($event, a.id)"
+            >
               <option
                 v-for="(item, index) in [
                   'LISTA',
@@ -38,14 +66,20 @@
                   'CONSUMIDA',
                 ]"
                 :key="index"
-                :selected="item==a.estado"
-              >{{item}}</option>
+                :selected="item == a.estado"
+              >
+                {{ item }}
+              </option>
             </select>
           </td>
         </tr>
       </tbody>
     </table>
-    <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="(nivel<2)">
+    <button
+      class="btn bt-outline-primary"
+      @click="AnteriorNivel"
+      :disabled="nivel < 2"
+    >
       Anterior
     </button>
     <button class="btn bt-outline-primary" @click="SiguienteNivel">
@@ -55,9 +89,11 @@
 </template>
 
 <script>
+import InputBox from "../components/InputBox.vue";
+
 export default {
   name: "CargarOperarios",
-  components: {},
+  components: { InputBox },
   data() {
     return {
       op_legajo: "",
@@ -69,18 +105,69 @@ export default {
       bMuro: false,
       bFocusSector: false,
       nivel: 1,
-      Accionar:"",
-      bIngresoDatos:false
+      Accionar: "",
+      bIngresoDatos: false,
+      bShowInputBox: false,
+      filtro_legajo: "",
+      filtro_nombre: "",
+      filtro_codigo: "",
+      filtro_descripcion: "",
+      valoramostrar: "",
     };
   },
   methods: {
-    alCambiar:function(event,id_sol){
-      console.log(event.target.value,id_sol);
-      
+    Resultado: function (valor) {
+      //Resultado del inputbox
+      switch (this.sColumna) {
+        case "Legajo":
+          this.filtro_legajo = valor;
+          this.sColumna = "";
+          break;
+        case "Nombre":
+          this.filtro_nombre = valor;
+          this.sColumna = "";
+          break;
+        case "Codigo":
+          this.filtro_codigo = valor;
+          this.sColumna = "";
+          break;
+        case "Descripcion":
+          this.filtro_descripcion = valor;
+          this.sColumna = "";
+          break;
+      }
+      this.ListarSolicitudes();
+      this.bShowInputBox = false;
+    },
+    Filtro: function (columna) {
+      this.sColumna = columna;
+      switch (this.sColumna) {
+        case "Legajo":
+          this.valoramostrar = this.filtro_legajo;
+
+          break;
+        case "Nombre":
+          this.valoramostrar = this.filtro_nombre;
+
+          break;
+        case "Codigo":
+          this.valoramostrar = this.filtro_codigo;
+
+          break;
+        case "Descripcion":
+          this.valoramostrar = this.filtro_descripcion;
+
+          break;
+      }
+
+      this.bShowInputBox = true;
+    },
+    alCambiar: function (event, id_sol) {
+      console.log(event.target.value, id_sol);
 
       this.bIngresoDatos = true;
       return;
-      
+
       let that = this;
 
       var formData = new FormData();
@@ -98,11 +185,9 @@ export default {
       fetch("/api/index.php?InsertarOperario", options)
         .then((res) => res.text())
         .then((res) => that.DatosRecibidos(res));
-
-
     },
-    
-    AnteriorNivel:function(){
+
+    AnteriorNivel: function () {
       this.nivel--;
       this.ListarSolicitudes();
     },
@@ -113,9 +198,28 @@ export default {
     ListarSolicitudes: function () {
       let that = this;
       console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1));
-      fetch("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1))
+
+      var formData = new FormData();
+
+      formData.append("legajo", that.filtro_legajo);
+      formData.append("codigo", that.filtro_codigo);
+      formData.append("nombre", that.filtro_nombre);
+      formData.append("descripcion", that.filtro_descripcion);
+      //console.log(formData);
+      //formData.append("nombre", that.op_nombre);
+      //formData.append("sector", that.op_sector);
+      // request options
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+
+
+      fetch("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1),options)
         .then((response) => response.json())
-        .then((resp) => {/* console.log(resp); */ that.lista_solicitudes = resp;});
+        .then((resp) => {
+          /* console.log(resp); */ that.lista_solicitudes = resp;
+        });
     },
     FiltrarSector: function () {
       this.lista_sectores_filtro = [];
@@ -182,5 +286,4 @@ export default {
   background-color: rgba(0, 102, 128, 0.527);
   z-index: 99999;
 }
-
 </style>

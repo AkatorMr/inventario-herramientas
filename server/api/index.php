@@ -40,13 +40,29 @@
             echo json_encode("error");
             exit();
         }
+
+        $legajo = $_POST["legajo"];
+        $codigo = $_POST["codigo"];
+        $nombre = $_POST["nombre"];
+        $descripcion = $_POST["descripcion"];
+
+
         $inicio = $sub_comando*6;
-        SF("SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
+        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
 FROM `solicitudes` s
 INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)
 INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)
-WHERE s.estado != 'CONSUMIDA' ORDER BY o.Legajo LIMIT $inicio,6;
-        ");
+WHERE s.estado != 'CONSUMIDA'";
+        $sql.=" AND h.Codigo LIKE '%$codigo%'";
+        $sql.=" AND h.Descripcion LIKE '%$descripcion%'";
+        $sql.=" AND o.Legajo LIKE '%$legajo%'";
+        $sql.=" AND (o.Nombre LIKE '%$nombre%'";
+        $sql.=" OR o.Apellido LIKE '%$nombre%')";
+
+        $sql.=" ORDER BY o.Legajo LIMIT $inicio,6;";
+        //echo $sql;
+
+        SF($sql);
         exit();
     }else if(strpos($comando,"ListarConsumos")!==FALSE){
     
