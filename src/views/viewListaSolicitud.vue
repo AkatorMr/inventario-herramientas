@@ -1,6 +1,20 @@
 <template>
   <div class="container">
-    <div class="MuroDeCarga" v-if="bIngresoDatos"></div>
+    <div class="MuroDeCarga" v-if="bIngresoDatos">
+      <div class="Recuadro">
+        <div class="text-center">
+          <span>Nro Solicitud</span>
+          <input class="form-control" v-model="nro_solicitud" />
+        </div>
+        <div class="text-center">
+          <span>Fecha</span>
+          <input class="form-control" type="date" v-model="nueva_fecha" />
+        </div>
+        <div class="text-center">
+          <button class="btn btn-primary" @click="enviarClick">Aceptar</button>
+        </div>
+      </div>
+    </div>
     <InputBox
       v-if="bShowInputBox"
       :Titulo="'Legajo'"
@@ -113,6 +127,10 @@ export default {
       filtro_codigo: "",
       filtro_descripcion: "",
       valoramostrar: "",
+      id_solicitud: 0,
+      nuevo_estado: "AGREGAR",
+      nro_solicitud: "",
+      nueva_fecha: "",
     };
   },
   methods: {
@@ -162,19 +180,15 @@ export default {
 
       this.bShowInputBox = true;
     },
-    alCambiar: function (event, id_sol) {
-      console.log(event.target.value, id_sol);
-
-      this.bIngresoDatos = true;
-      return;
-
+    enviarClick: function () {
       let that = this;
 
       var formData = new FormData();
-      formData.append("legajo", that.op_legajo);
-      formData.append("apellido", that.op_apellido);
-      formData.append("nombre", that.op_nombre);
-      formData.append("sector", that.op_sector);
+      formData.append("id_sol", that.id_solicitud);
+      formData.append("estado", that.nuevo_estado);
+      formData.append("nro_solicitud", that.nro_solicitud);
+      formData.append("fecha", that.nueva_fecha);
+      
       // request options
       const options = {
         method: "POST",
@@ -182,9 +196,22 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?InsertarOperario", options)
+      fetch("/api/index.php?ActualizarSolicitud", options)
         .then((res) => res.text())
-        .then((res) => that.DatosRecibidos(res));
+        .then((res) => that.DatosSolicitudRecibidos(res));
+
+    },
+    DatosSolicitudRecibidos: function (datos) {
+      this.bIngresoDatos = false;
+      this.nuevo_estado="";
+      this.id_solicitud =-1;
+      console.log(datos);
+    },
+    alCambiar: function (event, id_sol) {
+      console.log(event.target.value, id_sol);
+      this.nuevo_estado=event.target.value;
+      this.id_solicitud =id_sol;
+      this.bIngresoDatos = true;
     },
 
     AnteriorNivel: function () {
@@ -214,8 +241,10 @@ export default {
         body: formData,
       };
 
-
-      fetch("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1),options)
+      fetch(
+        "/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1),
+        options
+      )
         .then((response) => response.json())
         .then((resp) => {
           /* console.log(resp); */ that.lista_solicitudes = resp;
@@ -267,6 +296,24 @@ export default {
 </script>
 
 <style scoped>
+.Recuadro {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  margin-bottom: auto;
+  width: 250px;
+  height: 410px;
+  border-radius: 5px;
+  background-color: rgba(0, 204, 255);
+  z-index: 99991;
+  border: solid 1px black;
+}
+.Recuadro .form-control {
+  width: 90% !important;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
 .muro {
   position: absolute;
   left: 0;

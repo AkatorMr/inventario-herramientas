@@ -48,11 +48,12 @@
 
 
         $inicio = $sub_comando*6;
-        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado 
-FROM `solicitudes` s
-INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)
-INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)
-WHERE s.estado != 'CONSUMIDA'";
+
+        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado";
+        $sql.= " FROM `solicitudes` s";
+        $sql.= " INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)";
+        $sql.= " INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)";
+        $sql.= " WHERE s.estado != 'CONSUMIDA'";
         $sql.=" AND h.Codigo LIKE '%$codigo%'";
         $sql.=" AND h.Descripcion LIKE '%$descripcion%'";
         $sql.=" AND o.Legajo LIKE '%$legajo%'";
@@ -243,10 +244,34 @@ WHERE s.estado != 'CONSUMIDA'";
     
         $id_sol = $_POST["id_sol"];
         $estado = $_POST["estado"];
+        $fecha = $_POST["fecha"];
         $nro_solicitud = $_POST["nro_solicitud"];
         
-        
-        $sql = $sql = "UPDATE `solicitudes` SET `estado` = '$estado', `id_solicitud_compra` = '$nro_solicitud' WHERE `id`='$id_sol';";
+        $editar = "";
+        if(!empty($fecha)){
+            switch ($estado) {
+                case 'AGREGAR':
+                case 'GENERAR':
+                case 'CARGADO':
+                    $editar = "`fecha_solicitud` = '$fecha', ";
+                    break;
+                case 'LISTA':
+                case 'PERDIDA':
+                    $editar = "`fecha_sc` = '$fecha', ";
+                    break;
+                case 'DISPONIBLE':
+                case 'LLEGO':
+                    $editar = "`fecha_llegada` = '$fecha', ";
+                    break;
+                default:
+                    $editar="";
+            }
+        }
+        if(!empty($nro_solicitud))
+            $editar.="`id_solicitud_compra` = '$nro_solicitud', ";
+
+        $sql = "UPDATE `solicitudes` SET ".$editar."`estado` = '$estado' WHERE `id`='$id_sol';";
+        echo $sql;
         if(IN($sql)){
             echo json_encode("ac");
             exit();
