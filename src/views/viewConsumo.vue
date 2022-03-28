@@ -248,6 +248,8 @@ export default {
       this.tVale.MPot = null;
       this.lista_a_consumir = [];
       this.AgregarLineaConsumo();
+      this.FiltrarHerramienta(this.lista_a_consumir[0]);
+      this.bFocusCodigoODescripcion=false;
       this.$refs.ref_operario.LimpiarValores();
     },
     
