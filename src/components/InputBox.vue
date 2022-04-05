@@ -1,70 +1,59 @@
 <template>
-  <div class="MuroDeBloqueo">
-    
-      <div class="Recuadro">
-        <div class="text-center"> {{Titulo}}</div>
-        <div class="text-center"> 
-          
-          <input class="form-control" v-model="valorentrada">
-        </div>
-        <div class="text-center"> 
-          
-          <button class="btn btn-primary" @click="sendClick">Aceptar</button>
-        </div>
+  <MuroDeCarga>
+    <div class="Recuadro">
+      <div class="text-center">{{ Titulo }}</div>
+      <div class="text-center">
+        <input class="form-control" v-model="valorentrada" />
       </div>
-  </div>
+      <div class="text-center">
+        <button class="btn btn-primary" @click="sendClick">Aceptar</button>
+      </div>
+    </div>
+  </MuroDeCarga>
 </template>
 
 <script>
+import MuroDeCarga from "./MuroDeCarga.vue";
+
 export default {
-  name: 'ListaOperarios',
+  name: "ListaOperarios",
+  components: { MuroDeCarga },
   props: {
     Titulo: String,
-    Default:String,
+    Default: String,
   },
   data() {
     return {
-      lista_operarios:[],
-      valorentrada:""
-    }
+      lista_operarios: [],
+      valorentrada: "",
+    };
   },
   methods: {
-    sendClick:function(){
+    sendClick: function () {
       let valor = this.valorentrada;
-      this.$emit("Listo",valor);
+      this.$emit("Listo", valor);
     },
 
-    ListarOperarios: function(){
+    ListarOperarios: function () {
       let that = this;
-      fetch('/api/index.php?ListarOperarios').then(response => response.json()).then(resp=>that.lista_operarios=resp);
-  
+      fetch("/api/index.php?ListarOperarios")
+        .then((response) => response.json())
+        .then((resp) => (that.lista_operarios = resp));
     },
-    
   },
   mounted() {
     this.ListarOperarios();
-    this.valorentrada=this.Default;
+    this.valorentrada = this.Default;
   },
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.MuroDeBloqueo {
-  position: fixed;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  background-color: rgba(0, 9, 128, 0.199); 
-  z-index: 99990;
-}
-
 .Recuadro {
-  
   margin-left: auto;
   margin-right: auto;
-  margin-top:10%;
+  margin-top: 10%;
   margin-bottom: auto;
   width: 250px;
   height: 110px;
@@ -73,11 +62,9 @@ export default {
   z-index: 99991;
   border: solid 1px black;
 }
-.Recuadro .form-control{
+.Recuadro .form-control {
   width: 90% !important;
   margin: auto;
   margin-bottom: 5px;
 }
-
-
 </style>

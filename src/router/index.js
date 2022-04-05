@@ -9,13 +9,15 @@ import viewSolicitud from "../views/viewSolicitud.vue"
 import viewListaSolicitud from "../views/viewListaSolicitud.vue"
 import viewListaConsumo from "../views/viewListaConsumos.vue"
 import viewPruebas from "../views/viewPruebas.vue"
+import viewAnalizar from "../analizar/viewAnalizar.vue"
+
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Generar Consumo',
+    name: 'Main',
     component: viewConsumo
   },
   {
@@ -33,8 +35,8 @@ const routes = [
     name: 'Listar Consumos',
     component: viewListaConsumo
   },
-  {path:'/solicitud',name:'Solicitud',component:viewSolicitud},
-  {path:'/solicitud/lista',name:'ListaSolicitud',component:viewListaSolicitud},
+  { path: '/solicitud', name: 'Solicitud', component: viewSolicitud },
+  { path: '/solicitud/lista', name: 'ListaSolicitud', component: viewListaSolicitud },
   {
     path: '/addope',
     name: 'Add-Operario',
@@ -49,6 +51,11 @@ const routes = [
     path: '/addher',
     name: 'Add-Herramienta',
     component: AgregarHerramienta
+  },
+  {
+    path: '/analizar',
+    name: 'Analizar',
+    component: viewAnalizar
   },
   {
     path: '/about',
