@@ -7,6 +7,22 @@
       :Default="valoramostrar"
       @Listo="Resultado"
     ></InputBox>
+    <div class="container">
+      <ul class="nav justify-content-center embellecedor">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Dar de baja</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Transferir</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Devolver</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+    </div>
     <table class="table">
       <thead>
         <tr>
@@ -38,7 +54,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(a, key) of lista_consumos" :key="key">
+        <tr
+          v-for="(a, key) of lista_consumos"
+          :key="key"
+          :class="esta == key ? 'selected' : ''"
+          @click="pasar($event, key, a)"
+        >
           <th>{{ key + (nivel - 1) * 15 + 1 }}</th>
           <td scope="row">{{ a.Legajo }}</td>
           <td>{{ a.Nombre + " " + a.Apellido }}</td>
@@ -68,6 +89,7 @@ export default {
   components: { InputBox },
   data() {
     return {
+      esta: -1,
       op_legajo: "",
       op_apellido: "",
       op_sector: "",
@@ -88,6 +110,10 @@ export default {
     };
   },
   methods: {
+    pasar(event, key, objeto) {
+      console.log(objeto);
+      this.esta = key;
+    },
     Resultado: function (valor) {
       //Resultado del inputbox
       switch (this.sColumna) {
@@ -115,20 +141,20 @@ export default {
       this.sColumna = columna;
       switch (this.sColumna) {
         case "Legajo":
-          this.valoramostrar = this.filtro_legajo ;
-          
+          this.valoramostrar = this.filtro_legajo;
+
           break;
         case "Nombre":
-          this.valoramostrar = this.filtro_nombre ;
-          
+          this.valoramostrar = this.filtro_nombre;
+
           break;
         case "Codigo":
-          this.valoramostrar = this.filtro_codigo ;
-          
+          this.valoramostrar = this.filtro_codigo;
+
           break;
         case "Descripcion":
-          this.valoramostrar = this.filtro_descripcion ;
-          
+          this.valoramostrar = this.filtro_descripcion;
+
           break;
       }
 
@@ -205,5 +231,13 @@ export default {
 
 tr th div {
   cursor: pointer;
+}
+
+tr.selected {
+  border: 2px solid black;
+}
+
+.embellecedor{
+  border: 1px solid black;
 }
 </style>
