@@ -26,7 +26,7 @@ export default {
     
 <style scoped>
 .MuroDeCarga {
-  position: absolute;
+  position: relative;
   left: 0;
   width: 100%;
   height: 100%;

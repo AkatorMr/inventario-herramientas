@@ -1,19 +1,14 @@
 <template>
   <div class="container">
     <div class="MuroDeCarga" v-if="bIngresoDatos"></div>
-    <InputBox
-      v-if="bShowInputBox"
-      :Titulo="'Legajo'"
-      :Default="valoramostrar"
-      @Listo="Resultado"
-    ></InputBox>
+
     <div class="container">
       <ul class="nav justify-content-center embellecedor">
         <li class="nav-item">
           <a class="nav-link active" href="#">Dar de baja</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Transferir</a>
+          <a class="nav-link"  @click="MostrarVentana=true;">Transferir</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Devolver</a>
@@ -23,6 +18,15 @@
         </li>
       </ul>
     </div>
+    <InputBox
+      v-if="bShowInputBox"
+      :Titulo="'Legajo'"
+      :Default="valoramostrar"
+      @Listo="Resultado"
+    ></InputBox>
+    <MuroDeCarga :bMostrar="MostrarVentana">
+      <ListaOperarios></ListaOperarios>
+    </MuroDeCarga>
     <table class="table">
       <thead>
         <tr>
@@ -83,10 +87,12 @@
 
 <script>
 import InputBox from "../components/InputBox.vue";
+import MuroDeCarga from "../components/MuroDeCarga.vue";
+import ListaOperarios from "../components/ListaOperarios.vue";
 
 export default {
   name: "CargarOperarios",
-  components: { InputBox },
+  components: { InputBox,MuroDeCarga ,ListaOperarios},
   data() {
     return {
       esta: -1,
@@ -107,13 +113,41 @@ export default {
       filtro_codigo: "",
       filtro_descripcion: "",
       valoramostrar: "",
+      oItemSeleccionado: Object,
+      MostrarVentana:false
     };
   },
   methods: {
     pasar(event, key, objeto) {
       console.log(objeto);
       this.esta = key;
+      this.oItemSeleccionado = objeto;
     },
+    TransferirHerramienta: function (nuevodueño) {
+      if(this.oItemSeleccionado==null) return;
+      if(this.esta == -1) return;
+
+       var formData = new FormData();
+
+      formData.append("legajo", this.oItemSeleccionado.Legajo);
+      formData.append("codigo", this.oItemSeleccionado.Codigo);
+      formData.append("legajo_nuevo", nuevodueño);
+      
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+      let that = this;
+      fetch("/api/index.php?TransferirHerramienta", options)
+        .then((response) => response.json())
+        .then((resp) => {
+          //that.lista_operarios = resp
+          that.MostrarVentana=false;
+          //console.log(resp);
+        });
+
+    },
+
     Resultado: function (valor) {
       //Resultado del inputbox
       switch (this.sColumna) {
@@ -186,6 +220,9 @@ export default {
           that.lista_consumos = resp;
           //console.log(resp);
         });
+
+      this.esta = -1;
+      this.oItemSeleccionado = null;
     },
 
     AnteriorNivel: function () {
@@ -237,7 +274,7 @@ tr.selected {
   border: 2px solid black;
 }
 
-.embellecedor{
+.embellecedor {
   border: 1px solid black;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <MuroDeCarga>
+  <MuroDeCarga :bMostrar="true">
     <div class="Recuadro">
       <div class="text-center">{{ Titulo }}</div>
       <div class="text-center">
@@ -16,7 +16,6 @@
 import MuroDeCarga from "./MuroDeCarga.vue";
 
 export default {
-  name: "ListaOperarios",
   components: { MuroDeCarga },
   props: {
     Titulo: String,
@@ -24,7 +23,6 @@ export default {
   },
   data() {
     return {
-      lista_operarios: [],
       valorentrada: "",
     };
   },
@@ -42,7 +40,7 @@ export default {
     },
   },
   mounted() {
-    this.ListarOperarios();
+    //this.ListarOperarios();
     this.valorentrada = this.Default;
   },
 };
