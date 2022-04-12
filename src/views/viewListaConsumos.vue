@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="MuroDeCarga" v-if="bIngresoDatos"></div>
+    <div class="MuroDeCarga2" v-if="bIngresoDatos"></div>
 
     <div class="container">
       <ul class="nav justify-content-center embellecedor">
@@ -25,7 +25,8 @@
       @Listo="Resultado"
     ></InputBox>
     <MuroDeCarga :bMostrar="MostrarVentana">
-      <ListaOperarios></ListaOperarios>
+      
+      <SelectOperarios @OnSelect="CambiarS"></SelectOperarios>
     </MuroDeCarga>
     <table class="table">
       <thead>
@@ -89,10 +90,11 @@
 import InputBox from "../components/InputBox.vue";
 import MuroDeCarga from "../components/MuroDeCarga.vue";
 import ListaOperarios from "../components/ListaOperarios.vue";
+import SelectOperarios from "../components/SelectOperarios.vue";
 
 export default {
   name: "CargarOperarios",
-  components: { InputBox,MuroDeCarga ,ListaOperarios},
+  components: { InputBox,MuroDeCarga ,ListaOperarios,SelectOperarios},
   data() {
     return {
       esta: -1,
@@ -118,6 +120,9 @@ export default {
     };
   },
   methods: {
+    CambiarS(t,a,b){
+      console.log(t,a,b);
+    },
     pasar(event, key, objeto) {
       console.log(objeto);
       this.esta = key;
@@ -256,7 +261,7 @@ export default {
   z-index: 99999;
 }
 
-.MuroDeCarga {
+.MuroDeCarga2 {
   position: absolute;
   left: 0;
   width: 100%;

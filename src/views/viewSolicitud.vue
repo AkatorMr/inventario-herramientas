@@ -174,7 +174,7 @@ export default {
     LimpiarDatos: function () {
       this.tCodigo = "";
       this.tDescripcion = "";
-      this.tNombre = "";
+      //this.tNombre = "";
       this.tCantidad = 0;
     },
     ListarOperarios: function () {

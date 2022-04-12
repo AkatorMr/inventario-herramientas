@@ -26,11 +26,11 @@ export default {
     
 <style scoped>
 .MuroDeCarga {
-  position: relative;
-  left: 0;
+  position: fixed;
+  left: 0px;
   width: 100%;
   height: 100%;
-  top: 0;
+  top: 0px;
   background-color: rgba(0, 102, 128, 0.527);
   z-index: 99999;
 }
