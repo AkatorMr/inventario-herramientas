@@ -1,10 +1,23 @@
 <template>
-  <div class="container ">
+  <div class="container">
     <div class="Menu">
-      <div>Uno</div>
-      <div>Dos</div>
-      <div>Tres</div>
+      <div>Menu</div>
+      <div>Submenu</div>
+      <div>Herramientas</div>
       <div>Cuatro</div>
+    </div>
+
+    <div>
+      <span>Agregar</span>
+      <span>Agregar Otro Igual</span>
+      <span>Editar</span>
+      <span>Editar Selección</span>
+      <span>Eliminar</span>
+      <span>|</span>
+      <span>Seleccionar todo</span>
+      <span>Grupos</span>
+      <span>Importar/Exportar</span>
+      <span>Ayuda</span>
     </div>
   </div>
 </template>
@@ -14,52 +27,32 @@
   background-color: teal;
 }
 .Menu {
-  width: 400px;
-  height: 300px;
-  
+  /* width: 400px; */
 
   margin: auto;
   position: relative;
- padding: 4px;
+  padding: 4px;
 }
 
 .Menu div {
   background-color: rgb(238, 238, 238);
-  
+
   border-width: 2px;
   border-style: solid;
-  border-color: white ;
-}
-.Menu div:hover {
-  border-color: rgb(115, 106, 240);
+  border-color: white;
+
+  display: inline-block;
 }
 .Menu div:nth-child(1) {
-  position: absolute;
-
-  width: 200px;
-  height: 200px;
-  left: 0;
-  top: 0;
+  width: 60px;
 }
 .Menu div:nth-child(2) {
-  width: 200px;
-  height: 100px;
-  position: absolute;
-  left: 200px;
-  top: 0px;
+  width: 60px;
 }
 .Menu div:nth-child(3) {
-  width: 200px;
-  height: 100px;
-  position: absolute;
-  left: 00px;
-  top: 200px;
+  width: 100%;
 }
 .Menu div:nth-child(4) {
-  width: 200px;
-  height: 200px;
-  position: absolute;
-  left: 200px;
-  top: 100px;
+  width: 40px;
 }
 </style>
