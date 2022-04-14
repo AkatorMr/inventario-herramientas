@@ -35,6 +35,8 @@
         v-model="op_nombre"
       />
     </div>
+    <!-- <InputDropDown :prompt="'Sector'" :lista_completa="lista_sectores_filtro"></InputDropDown> -->
+
     <div class="input-group mb-3">
       <span class="input-group-text col-sm-1" id="basic-addon1">Sector</span>
       <input
@@ -66,7 +68,8 @@
             href="#"
             v-for="(item, key) in lista_sectores_filtro"
             :key="key"
-            @click="op_sector = item;FiltrarSector();"
+            @mousedown="op_sector = item;
+            FiltrarSector();"
             >{{ item }}</a
           >
         </li>
@@ -81,11 +84,13 @@
 
 <script>
 import ListaOperarios from "../components/ListaOperarios.vue";
+import InputDropDown from "../components/InputDropDown.vue";
 
 export default {
   name: "CargarOperarios",
   components: {
     ListaOperarios,
+    InputDropDown
   },
   data() {
     return {
@@ -101,7 +106,7 @@ export default {
   },
   methods: {
     ListarSectores: function () {
-      console.log("Text");
+      //console.log("Text");
       let that = this;
       fetch("/api/index.php?ListarSectores")
         .then((response) => response.json())
@@ -111,7 +116,7 @@ export default {
       this.lista_sectores_filtro = [];
       for (let item in this.lista_sectores) {
         
-        if (this.lista_sectores[item].Sector.includes(this.op_sector) || this.op_sector=="") {
+        if (this.lista_sectores[item].Sector.toUpperCase().includes(this.op_sector.toUpperCase()) || this.op_sector=="") {
           this.lista_sectores_filtro.push(this.lista_sectores[item].Sector);
         }
       }

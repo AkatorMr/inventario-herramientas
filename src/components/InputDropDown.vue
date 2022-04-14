@@ -1,6 +1,6 @@
 <template>
   <div class="input-group mb-3">
-    <span class="input-group-text col-md-2">{{ prompt }}:</span>
+    <span class="input-group-text col-md-2" v-if="prompt!=''">{{ prompt }}:</span>
 
     <ul
       :class="
@@ -73,6 +73,7 @@ export default {
       this.lista_filtrada = [];
       for (let item in this.lista_completa) {
         let cod = this.lista_completa[item];
+        console.log(cod);
         if (cod == null) continue;
         cod = cod.toUpperCase();
 
