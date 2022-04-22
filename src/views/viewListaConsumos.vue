@@ -20,7 +20,7 @@
     </div>
     <InputBox
       v-if="bShowInputBox"
-      :Titulo="'Legajo'"
+      :Titulo="sColumna"
       :Default="valoramostrar"
       @Listo="Resultado"
     ></InputBox>
@@ -56,6 +56,12 @@
               {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
             </div>
           </th>
+          <th scope="col">
+            <span>Cantidad</span>
+            <div @click="Filtro('Cantidad')">
+              {{ filtro_cantidad == "" ? "#######" : filtro_cantidad }}
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -70,6 +76,7 @@
           <td>{{ a.Nombre + " " + a.Apellido }}</td>
           <td>{{ a.Codigo }}</td>
           <td>{{ a.Descripcion }}</td>
+          <td>{{ a.Cantidad }}</td>
         </tr>
       </tbody>
     </table>
@@ -114,6 +121,8 @@ export default {
       filtro_nombre: "",
       filtro_codigo: "",
       filtro_descripcion: "",
+      filtro_cantidad:0,
+      filtro_encabezado:"",
       valoramostrar: "",
       oItemSeleccionado: Object,
       MostrarVentana:false
@@ -155,6 +164,7 @@ export default {
 
     Resultado: function (valor) {
       //Resultado del inputbox
+      
       switch (this.sColumna) {
         case "Legajo":
           this.filtro_legajo = valor;
@@ -173,6 +183,7 @@ export default {
           this.sColumna = "";
           break;
       }
+      
       this.ListarConsumos();
       this.bShowInputBox = false;
     },
