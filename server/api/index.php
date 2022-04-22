@@ -74,7 +74,7 @@
 
 
         $inicio = $sub_comando*15;
-        $sql="SELECT operarios.Legajo, herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido";
+        $sql="SELECT operarios.Legajo, herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido, SUM(con.cantidad) as Cantidad";
         $sql.=" FROM `consumos` con";
         $sql.=" INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
         $sql.=" INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo";
@@ -83,6 +83,7 @@
         $sql.=" AND operarios.Legajo LIKE '%$legajo%'";
         $sql.=" AND (operarios.Nombre LIKE '%$nombre%'";
         $sql.=" OR operarios.Apellido LIKE '%$nombre%')";
+        $sql.=" GROUP BY herramientas.Codigo";
         $sql.=" ORDER BY operarios.Legajo, herramientas.Codigo LIMIT $inicio,15;";
 
         //echo $sql;
