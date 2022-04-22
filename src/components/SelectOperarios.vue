@@ -1,11 +1,14 @@
 <template>
-  <div class="container" style="position: relative; top: 50%; ">
-    <div style="width: 300px;margin-right: auto;margin-left: auto;">
-    <InputDropDown style=""
-    :prompt="'New'"
-      :lista_completa="lista_operarios_string"
-      @onchange="AlCambiar"
-    ></InputDropDown>
+  <div class="container" style="position: relative; top: 35%">
+    <div class="form">
+      <div>
+      <InputDropDown
+        style=""
+        :prompt="'Nuevo operario'"
+        :lista_completa="lista_operarios_string"
+        @onchange="AlCambiar"
+      ></InputDropDown>
+      </div>
     </div>
   </div>
 </template>
@@ -76,4 +79,17 @@ li {
 a {
   color: #42b983;
 }
+.form {
+  width: 900px;
+  height: 200px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: rgba(87, 69, 69, 0.562);
+  padding: 10px;
+  border-radius: 3px;
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  
+  }
 </style>
