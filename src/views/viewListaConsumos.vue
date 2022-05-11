@@ -75,7 +75,7 @@
           <td scope="row">{{ a.Legajo }}</td>
           <td>{{ a.Nombre + " " + a.Apellido }}</td>
           <td>{{ a.Codigo }}</td>
-          <td>{{ a.Descripcion }}</td>
+          <td class="text-start">{{ a.Descripcion }}</td>
           <td>{{ a.Cantidad }}</td>
         </tr>
       </tbody>

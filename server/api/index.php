@@ -281,6 +281,71 @@
         
         echo json_encode("error");
         die();
+    }else if(strpos($comando,"EditarOperarioOperario")!==FALSE){
+
+        $legajo_original = $_POST["legajo_original"];
+        
+        $legajo = $_POST["legajo"];
+        $apellido = $_POST["apellido"];
+        $nombre = $_POST["nombre"];
+        $sector = $_POST["sector"];
+
+        $bypass = $_POST["pass"]=="by";
+
+        if($legajo != $legajo_original && !$bypass){
+            $sql = "SELECT * FROM operarios WHERE legajo='$legajo'";
+            $res = $mysqli->query($sql);
+            $c=0;
+            while($row = $res->fetch_assoc()){
+                $c++;
+            }
+            
+            if($c!=0) {
+                echo json_encode("error - Ya existe operario con ese legajo");
+                exit();
+            }
+        }
+        
+        //Actualizamos tanto al operario como a los consumos relacionados.
+        $sql = "UPDATE `operarios` SET `legajo` = '$legajo',";
+        $sql.= " `Nombre` = '$nombre',";
+        $sql.= " `Apellido` = '$apellido',";
+        $sql.= " `Sector` = '$sector'";
+        $sql.= " WHERE `legajo`='$legajo_original';";
+
+        if($legajo != $legajo_original){
+            $sql.= "UPDATE `consumos` SET `legajo_operario` = '$legajo'";
+            $sql.= " WHERE `legajo_operario`='$legajo_original';";
+        }
+
+        //echo $sql;
+        $query = $sql;
+        /* execute multi query */
+        $mysqli->multi_query($query);
+        $cc = 0;
+        do {
+            /* store the result set in PHP */
+            if ($result = $mysqli->store_result()) {
+                /* while ($row = $result->fetch_row()) {
+                    printf("%s\n", $row[0]);
+                } */
+                $cc++;
+            }
+            /* print divider */
+            if (!$mysqli->more_results()) {
+                //printf("-----------------\n");
+            break;
+            }
+        } while ($mysqli->next_result());
+
+        //echo $cc;
+
+        if(empty($mysqli->error)){
+            echo json_encode("ac.");        
+            exit();
+        }
+        echo json_encode("error no se actualizaron los valores.");
+        exit();
     }
 
     

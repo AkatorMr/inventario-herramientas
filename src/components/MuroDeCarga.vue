@@ -1,5 +1,5 @@
 <template>
-  <div class="MuroDeCarga" v-if="bMostrar">
+  <div class="MuroDeCarga" v-if="bMostrar" @click="click2">
     <slot></slot>
   </div>
 </template>
@@ -20,6 +20,9 @@ export default {
   },
   methods: {
     Mostrar() {},
+    click2(obj){
+      this.$emit("click",obj)
+    }
   },
 };
 </script>
