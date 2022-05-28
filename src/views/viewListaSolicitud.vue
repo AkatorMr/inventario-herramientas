@@ -24,7 +24,7 @@
 
     <table class="table">
       <thead>
-        <tr>
+        <tr class="ajustar-ancho">
           <th scope="col">
             Legajo
             <div @click="Filtro('Legajo')">
@@ -43,7 +43,7 @@
               {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
             </div>
           </th>
-          <th scope="col">
+          <th scope="col" style="width:44%;">
             Descripción
             <div @click="Filtro('Descripcion')">
               {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
@@ -63,6 +63,11 @@
             {{ a.estado }}
           </td>
           <td>
+            <div class="a-icon-group">
+              <div class="a-icon aplicar"></div>
+              <div class="a-icon editar"></div>
+              <div class="a-icon eliminar"></div>
+            </div>
             <select
               class="form-select mb-6"
               aria-label=""
@@ -313,6 +318,25 @@ export default {
   margin: auto;
   margin-bottom: 5px;
 }
+.ajustar-ancho>th:nth-child(1){
+  width: 117px;
+}
+.ajustar-ancho>th:nth-child(2){
+  width: 121px;
+}
+.ajustar-ancho>th:nth-child(3){
+  width: 160px;
+}
+.ajustar-ancho>th:nth-child(4){
+  width: 475px;
+}
+.ajustar-ancho>th:nth-child(5){
+  width: 120px;
+}
+.ajustar-ancho>th:nth-child(6){
+  width: 120px;
+}
+
 
 .muro {
   position: absolute;
@@ -332,5 +356,35 @@ export default {
   top: 0;
   background-color: rgba(0, 102, 128, 0.527);
   z-index: 99999;
+}
+
+.a-icon-group {
+  display: flex;
+}
+.a-icon {
+  width: 32px;
+  height: 32px;
+  
+  margin: 2px;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: solid;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor:pointer;
+}
+
+.a-icon.aplicar{
+  background-image: url("./../assets/aplicar.png");
+}
+.a-icon.editar{
+  background-image: url("./../assets/edit.png");
+}
+.a-icon.eliminar{
+  background-image: url("./../assets/eliminar.gif");
+}
+.a-icon.seleccionar{
+  background-image: url("./../assets/seleccionar.png");
 }
 </style>
