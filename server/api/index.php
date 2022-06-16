@@ -281,6 +281,21 @@
         
         echo json_encode("error");
         die();
+    }else if(strpos($comando,"EliminarSolicitud")!==FALSE){
+        $id_sol = $_POST["id_sol"];
+        
+        $editar = "`fecha_solicitud` = '$fecha', ";
+                   
+        $sql = "UPDATE `solicitudes` SET ".$editar."`estado` = 'ELIMINADA' WHERE `id`='$id_sol';";
+        echo $sql;
+        if(IN($sql)){
+            echo json_encode("ac");
+            exit();
+        }
+        
+        
+        echo json_encode("error");
+        die();
     }else if(strpos($comando,"EditarOperarioOperario")!==FALSE){
 
         $legajo_original = $_POST["legajo_original"];

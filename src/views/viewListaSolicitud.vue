@@ -1,7 +1,33 @@
 <template>
   <div class="container">
-    <div class="MuroDeCarga" v-if="bIngresoDatos">
+    <MuroDeCarga :bMostrar="bIngresoDatos">
+    <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
       <div class="Recuadro">
+        <div class="text-center">
+          <span>Cambiar Estado</span>
+        <select
+              class="form-select mb-6"
+              aria-label=""
+              
+            >
+              <option
+                v-for="(item, index) in [
+                  'LISTA',
+                  'PERDIDA',
+                  'CARGADO',
+                  'DISPONIBLE',
+                  'LLEGO',
+                  'GENERAR',
+                  'AGREGAR',
+                  'CONSUMIDA',
+                ]"
+                :key="index"
+                
+              >
+                {{ item }}
+              </option>
+            </select>
+        </div>
         <div class="text-center">
           <span>Nro Solicitud</span>
           <input class="form-control" v-model="nro_solicitud" />
@@ -14,7 +40,8 @@
           <button class="btn btn-primary" @click="enviarClick">Aceptar</button>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
+    </MuroDeCarga>
     <InputBox
       v-if="bShowInputBox"
       :Titulo="'Legajo'"
@@ -43,7 +70,7 @@
               {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
             </div>
           </th>
-          <th scope="col" style="width:44%;">
+          <th scope="col" style="width: 44%">
             Descripción
             <div @click="Filtro('Descripcion')">
               {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
@@ -64,32 +91,11 @@
           </td>
           <td>
             <div class="a-icon-group">
-              <div class="a-icon aplicar"></div>
-              <div class="a-icon editar"></div>
-              <div class="a-icon eliminar"></div>
+              <div class="a-icon aplicar" title="Marcar como disponible" @click="ActualizarSolicitud(a.id,'DISPONIBLE')"></div>
+              <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
+              <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
             </div>
-            <select
-              class="form-select mb-6"
-              aria-label=""
-              @change="alCambiar($event, a.id)"
-            >
-              <option
-                v-for="(item, index) in [
-                  'LISTA',
-                  'PERDIDA',
-                  'CARGADO',
-                  'DISPONIBLE',
-                  'LLEGO',
-                  'GENERAR',
-                  'AGREGAR',
-                  'CONSUMIDA',
-                ]"
-                :key="index"
-                :selected="item == a.estado"
-              >
-                {{ item }}
-              </option>
-            </select>
+            
           </td>
         </tr>
       </tbody>
@@ -109,10 +115,11 @@
 
 <script>
 import InputBox from "../components/InputBox.vue";
+import MuroDeCarga from "../components/MuroDeCarga.vue";
 
 export default {
   name: "CargarOperarios",
-  components: { InputBox },
+  components: { InputBox ,MuroDeCarga},
   data() {
     return {
       op_legajo: "",
@@ -193,7 +200,7 @@ export default {
       formData.append("estado", that.nuevo_estado);
       formData.append("nro_solicitud", that.nro_solicitud);
       formData.append("fecha", that.nueva_fecha);
-      
+
       // request options
       const options = {
         method: "POST",
@@ -204,19 +211,29 @@ export default {
       fetch("/api/index.php?ActualizarSolicitud", options)
         .then((res) => res.text())
         .then((res) => that.DatosSolicitudRecibidos(res));
-
     },
+    
     DatosSolicitudRecibidos: function (datos) {
       this.bIngresoDatos = false;
-      this.nuevo_estado="";
-      this.id_solicitud =-1;
+      this.nuevo_estado = "";
+      this.id_solicitud = -1;
       console.log(datos);
     },
-    alCambiar: function (event, id_sol) {
-      console.log(event.target.value, id_sol);
-      this.nuevo_estado=event.target.value;
-      this.id_solicitud =id_sol;
+    
+    ActualizarSolicitud: function (id_sol,estado) {
+      this.id_solicitud = id_sol;
       this.bIngresoDatos = true;
+
+      if(estado=="DISPONIBLE"){
+        this.nuevo_estado="DISPONIBLE";
+        this.nro_solicitud = id_sol;
+        let v = new Date();
+        let sFecha = v.getFullYear() + "-";
+        sFecha+= (v.getMonth()+1<10?"0":"") +(v.getMonth()+1)+"-";
+        sFecha+= (v.getDate()<10?"0":"")+v.getDate();
+        this.nueva_fecha=sFecha;
+        this.enviarClick();
+      }
     },
 
     AnteriorNivel: function () {
@@ -227,6 +244,29 @@ export default {
       this.nivel++;
       this.ListarSolicitudes();
     },
+    EliminarSolicitud: function (id_sol) {
+      let that = this;
+      this.bIngresoDatos = true;
+      this.id_solicitud = id_sol;
+      console.log(id_sol);
+      
+      
+      var formData = new FormData();
+      formData.append("id_sol", that.id_solicitud);      
+
+      // request options
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+
+      // send POST request
+      fetch("/api/index.php?EliminarSolicitud", options)
+        .then((res) => res.text())
+        .then((res) => that.DatosSolicitudRecibidos(res));
+    },
+
+
     ListarSolicitudes: function () {
       let that = this;
       console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1));
@@ -318,25 +358,24 @@ export default {
   margin: auto;
   margin-bottom: 5px;
 }
-.ajustar-ancho>th:nth-child(1){
+.ajustar-ancho > th:nth-child(1) {
   width: 117px;
 }
-.ajustar-ancho>th:nth-child(2){
+.ajustar-ancho > th:nth-child(2) {
   width: 121px;
 }
-.ajustar-ancho>th:nth-child(3){
+.ajustar-ancho > th:nth-child(3) {
   width: 160px;
 }
-.ajustar-ancho>th:nth-child(4){
+.ajustar-ancho > th:nth-child(4) {
   width: 475px;
 }
-.ajustar-ancho>th:nth-child(5){
+.ajustar-ancho > th:nth-child(5) {
   width: 120px;
 }
-.ajustar-ancho>th:nth-child(6){
+.ajustar-ancho > th:nth-child(6) {
   width: 120px;
 }
-
 
 .muro {
   position: absolute;
@@ -348,15 +387,6 @@ export default {
   z-index: 99999;
 }
 
-.MuroDeCarga {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  background-color: rgba(0, 102, 128, 0.527);
-  z-index: 99999;
-}
 
 .a-icon-group {
   display: flex;
@@ -364,7 +394,7 @@ export default {
 .a-icon {
   width: 32px;
   height: 32px;
-  
+
   margin: 2px;
   border-color: black;
   border-width: 1px;
@@ -372,19 +402,19 @@ export default {
   border-style: solid;
   background-position: center;
   background-repeat: no-repeat;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-.a-icon.aplicar{
+.a-icon.aplicar {
   background-image: url("./../assets/aplicar.png");
 }
-.a-icon.editar{
+.a-icon.editar {
   background-image: url("./../assets/edit.png");
 }
-.a-icon.eliminar{
+.a-icon.eliminar {
   background-image: url("./../assets/eliminar.gif");
 }
-.a-icon.seleccionar{
+.a-icon.seleccionar {
   background-image: url("./../assets/seleccionar.png");
 }
 </style>
