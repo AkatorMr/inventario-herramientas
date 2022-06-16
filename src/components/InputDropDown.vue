@@ -42,6 +42,7 @@ ActualizarValores();
       @blur="bFocus = false"
       @change="ActualizarValores()"
     />
+    <slot></slot>
   </div>
 </template>
 <script>

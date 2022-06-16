@@ -1,7 +1,13 @@
 <?php
     include "conexion.php";
+    function MPLog($data){
+        $fp = fopen("log.txt","a+");
+        fprintf($fp,$data."\n");
+        fclose($fp);
+    }
     $comando = (array_keys($_GET));
 
+    
     if(count($comando)==0)
         exit();
         
@@ -109,9 +115,22 @@
         $vale_mp= $_POST["mpvale"];
         $ot_mp= $_POST["mpot"];
 
-        //include "editar.xlsx.php";
+        $vale_fecha = $_POST["valefecha"];
 
+        //include "editar.xlsx.php";
         $fecha_consumo = date("Y-m-d");
+        //MPLog($vale_fecha);
+        //$tiempo  = DateTime::createFromFormat('d/m/Y', $vale_fecha);
+        //MPLog($tiempo);
+        //echo json_encode([$tiempo,$vale_fecha);
+        //exit();
+        //MPLog($fecha_consumo);
+        //if($tiempo instanceof DateTime){
+        if(!empty($vale_fecha)){
+            //$fecha_consumo = date("Y-m-d",$tiempo);
+            $fecha_consumo = $vale_fecha;
+        }
+        //MPLog($fecha_consumo);
         //echo json_encode($fecha_consumo);
         //exit();
 
@@ -150,12 +169,15 @@
                 
 
             }
-            if(IN($sql))
-                if(IN("INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle','$vale_mp','$ot_mp')")){
+            if(IN($sql)){
+                $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle','$vale_mp','$ot_mp')";
+                //MPLog($sql_2);
+                if(IN($sql_2)){
                     $c= true;
                     $s.="1";
                     continue;
                 }
+            }
             $c=false;
             $s=$sql;
         }

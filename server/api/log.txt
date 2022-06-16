@@ -1,0 +1,12 @@
+2022-06-14
+
+2022-06-16
+2022-06-16
+
+
+2022-06-16
+2022-06-16
+INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('123456','DESTOR_11_0054','1','2022-06-16','CONSUMIDA','5745382','null','null')
+INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('123456','DESTOR_11_0054','1','1994-01-11','CONSUMIDA','5745382','null','null')
+INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('123456','DESTOR_11_0054','1','2022-06-14','CONSUMIDA','5745382','null','null')
+INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('000011','AMOLAD_11_0003','1','2022-06-13','CONSUMIDA','5742539','null','null')

@@ -95,7 +95,16 @@
           tNombre = val;
         }
       "
-    ></input-drop-down>
+    >
+    <span class="input-group-text col-md-1">Fecha:</span>
+
+      <input
+        class="form-control col-md-1"
+        placeholder="dd/mm/yyyy"
+        v-model="tVale.Fecha"
+        type="date"
+      />
+    </input-drop-down>
 
     <div class="input-group mb-3">
       <span class="input-group-text col-md-2">Vale Oracle:</span>
@@ -145,7 +154,7 @@ export default {
       bFocusCodigoODescripcion: true,
       tNombre: "",
       bMuroDeCarga: false,
-      tVale: { Oracle: null, MPot: null, MPvale: null },
+      tVale: { Oracle: null, MPot: null, MPvale: null, Fecha:null },
       AgregarDo: "Agregar",
       lista_a_consumir:[],
     };
@@ -209,6 +218,7 @@ export default {
       formData.append("valeoracle", that.tVale.Oracle);
       formData.append("mpot", that.tVale.MPot);
       formData.append("mpvale", that.tVale.MPvale);
+      formData.append("valefecha", that.tVale.Fecha);
       console.log(formData);
       //formData.append("nombre", that.op_nombre);
       //formData.append("sector", that.op_sector);
@@ -246,6 +256,7 @@ export default {
       this.tVale.Oracle = null;
       this.tVale.MPvale = null;
       this.tVale.MPot = null;
+      this.tVale.Fecha = null;
       this.lista_a_consumir = [];
       this.AgregarLineaConsumo();
       this.FiltrarHerramienta(this.lista_a_consumir[0]);
