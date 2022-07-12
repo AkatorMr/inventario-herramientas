@@ -22,3 +22,8 @@ pnpm-debug.log*
 *.sln
 *.sw?
 server/lib/*
+server/*.ico
+server/js/*.js
+server/js/*.map
+server/css/*.css
+server/index.html

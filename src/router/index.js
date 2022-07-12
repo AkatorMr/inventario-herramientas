@@ -10,6 +10,7 @@ import viewListaSolicitud from "../views/viewListaSolicitud.vue"
 import viewListaConsumo from "../views/viewListaConsumos.vue"
 import viewPruebas from "../views/viewPruebas.vue"
 import viewAnalizar from "../analizar/viewAnalizar.vue"
+import viewEstadisticaConsumo from "../views/viewEstadisticaConsumos.vue"
 
 
 Vue.use(VueRouter)
@@ -34,6 +35,11 @@ const routes = [
     path: '/consumos/lista',
     name: 'Listar Consumos',
     component: viewListaConsumo
+  },
+  {
+    path: '/consumos/estadistica',
+    name: 'Estadistica Consumos',
+    component: viewEstadisticaConsumo
   },
   { path: '/solicitud', name: 'Solicitud', component: viewSolicitud },
   { path: '/solicitud/lista', name: 'ListaSolicitud', component: viewListaSolicitud },

@@ -8,7 +8,7 @@
           <a class="nav-link active" href="#">Dar de baja</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" @click="MostrarVentana = true">Transferir</a>
+          <a class="nav-link"  @click="MostrarVentana=true;">Transferir</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Devolver</a>
@@ -25,24 +25,14 @@
       @Listo="Resultado"
     ></InputBox>
     <MuroDeCarga :bMostrar="MostrarVentana">
+      
       <SelectOperarios @OnSelect="CambiarS"></SelectOperarios>
     </MuroDeCarga>
     <table class="table">
       <thead>
         <tr>
           <th scope="col">Nro</th>
-          <th scope="col">
-            <span>Legajo</span>
-            <div @click="Filtro('Legajo')">
-              {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
-            </div>
-          </th>
-          <th scope="col">
-            <span>Nombre y Apellido</span>
-            <div @click="Filtro('Nombre')">
-              {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
-            </div>
-          </th>
+          
           <th scope="col">
             <span>Código</span>
             <div @click="Filtro('Codigo')">
@@ -61,10 +51,6 @@
               {{ filtro_cantidad == "" ? "#######" : filtro_cantidad }}
             </div>
           </th>
-          <th scope="col">
-            <span>Fecha</span>
-            
-          </th>
         </tr>
       </thead>
       <tbody>
@@ -75,12 +61,9 @@
           @click="pasar($event, key, a)"
         >
           <th>{{ key + (nivel - 1) * 15 + 1 }}</th>
-          <td scope="row">{{ a.Legajo }}</td>
-          <td>{{ a.Nombre + " " + a.Apellido }}</td>
           <td>{{ a.Codigo }}</td>
           <td class="text-start">{{ a.Descripcion }}</td>
           <td>{{ a.Cantidad }}</td>
-          <td>{{ a.Fecha }}</td>
         </tr>
       </tbody>
     </table>
@@ -105,7 +88,7 @@ import SelectOperarios from "../components/SelectOperarios.vue";
 
 export default {
   name: "CargarOperarios",
-  components: { InputBox, MuroDeCarga, ListaOperarios, SelectOperarios },
+  components: { InputBox,MuroDeCarga ,ListaOperarios,SelectOperarios},
   data() {
     return {
       esta: -1,
@@ -125,16 +108,16 @@ export default {
       filtro_nombre: "",
       filtro_codigo: "",
       filtro_descripcion: "",
-      filtro_cantidad: 0,
-      filtro_encabezado: "",
+      filtro_cantidad:0,
+      filtro_encabezado:"",
       valoramostrar: "",
       oItemSeleccionado: Object,
-      MostrarVentana: false,
+      MostrarVentana:false
     };
   },
   methods: {
-    CambiarS(t, a, b) {
-      console.log(t, a, b);
+    CambiarS(t,a,b){
+      console.log(t,a,b);
     },
     pasar(event, key, objeto) {
       console.log(objeto);
@@ -142,15 +125,15 @@ export default {
       this.oItemSeleccionado = objeto;
     },
     TransferirHerramienta: function (nuevodueño) {
-      if (this.oItemSeleccionado == null) return;
-      if (this.esta == -1) return;
+      if(this.oItemSeleccionado==null) return;
+      if(this.esta == -1) return;
 
-      var formData = new FormData();
+       var formData = new FormData();
 
       formData.append("legajo", this.oItemSeleccionado.Legajo);
       formData.append("codigo", this.oItemSeleccionado.Codigo);
       formData.append("legajo_nuevo", nuevodueño);
-
+      
       const options = {
         method: "POST",
         body: formData,
@@ -160,14 +143,15 @@ export default {
         .then((response) => response.json())
         .then((resp) => {
           //that.lista_operarios = resp
-          that.MostrarVentana = false;
-          console.log(resp);
+          that.MostrarVentana=false;
+          //console.log(resp);
         });
+
     },
 
     Resultado: function (valor) {
       //Resultado del inputbox
-
+      
       switch (this.sColumna) {
         case "Legajo":
           this.filtro_legajo = valor;
@@ -186,7 +170,7 @@ export default {
           this.sColumna = "";
           break;
       }
-
+      
       this.ListarConsumos();
       this.bShowInputBox = false;
     },
@@ -232,15 +216,12 @@ export default {
         body: formData,
       };
 
-      fetch("/api/index.php?ListarConsumos&nivel=" + (this.nivel - 1), options)
-        .then((response) => 
-          response.json()
-          
-        )
+      fetch("/api/index.php?ListarConsumosEstadistica&nivel=" + (this.nivel - 1), options)
+        .then((response) => response.json())
         .then((resp) => {
           //that.lista_operarios = resp
           that.lista_consumos = resp;
-          /* console.log(resp); */
+          console.log(resp);
         });
 
       this.esta = -1;
@@ -262,6 +243,7 @@ export default {
     },
   },
   mounted() {
+    
     this.ListarConsumos();
   },
 };

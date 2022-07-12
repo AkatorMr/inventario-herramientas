@@ -71,6 +71,25 @@
 
         SF($sql);
         exit();
+    }else if(strpos($comando,"ListarConsumosEstadistica")!==FALSE){
+    
+        
+        $codigo = $_POST["codigo"];
+        $descripcion = $_POST["descripcion"];
+
+
+        $inicio = $sub_comando*15;
+        $sql="SELECT herramientas.Codigo, herramientas.Descripcion AS Descripcion, SUM(con.cantidad) as Cantidad";
+        $sql.=" FROM `consumos` con";
+        $sql.=" INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
+        $sql.=" WHERE herramientas.Codigo LIKE '%$codigo%'";
+        $sql.=" AND herramientas.Descripcion LIKE '%$descripcion%'";
+        $sql.=" GROUP BY herramientas.Codigo";
+        $sql.=" ORDER BY Cantidad DESC LIMIT $inicio,15;";
+
+        //echo $sql;        
+        SF($sql);
+        exit();
     }else if(strpos($comando,"ListarConsumos")!==FALSE){
     
         $legajo = $_POST["legajo"];
@@ -80,7 +99,7 @@
 
 
         $inicio = $sub_comando*15;
-        $sql="SELECT operarios.Legajo, herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido, SUM(con.cantidad) as Cantidad";
+        $sql="SELECT operarios.Legajo, herramientas.Codigo, herramientas.Descripcion AS Descripcion, operarios.Nombre AS Nombre, operarios.Apellido AS Apellido, SUM(con.cantidad) as Cantidad, con.fecha_consumido AS Fecha";
         $sql.=" FROM `consumos` con";
         $sql.=" INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
         $sql.=" INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo";
@@ -100,6 +119,7 @@
         
         SF($sql);
         exit();
+    
     }else if(strpos($comando,"ListarCodigos")!==FALSE){
     
         SF("SELECT `Codigo`,`Descripcion` FROM `herramientas`");
