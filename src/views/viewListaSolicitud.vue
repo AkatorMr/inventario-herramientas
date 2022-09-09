@@ -1,32 +1,27 @@
 <template>
   <div class="container">
     <MuroDeCarga :bMostrar="bIngresoDatos">
-    <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
+      <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
       <div class="Recuadro">
         <div class="text-center">
           <span>Cambiar Estado</span>
-        <select
-              class="form-select mb-6"
-              aria-label=""
-              
+          <select class="form-select mb-6" aria-label="">
+            <option
+              v-for="(item, index) in [
+                'LISTA',
+                'PERDIDA',
+                'CARGADO',
+                'DISPONIBLE',
+                'LLEGO',
+                'GENERAR',
+                'AGREGAR',
+                'CONSUMIDA',
+              ]"
+              :key="index"
             >
-              <option
-                v-for="(item, index) in [
-                  'LISTA',
-                  'PERDIDA',
-                  'CARGADO',
-                  'DISPONIBLE',
-                  'LLEGO',
-                  'GENERAR',
-                  'AGREGAR',
-                  'CONSUMIDA',
-                ]"
-                :key="index"
-                
-              >
-                {{ item }}
-              </option>
-            </select>
+              {{ item }}
+            </option>
+          </select>
         </div>
         <div class="text-center">
           <span>Nro Solicitud</span>
@@ -40,11 +35,11 @@
           <button class="btn btn-primary" @click="enviarClick">Aceptar</button>
         </div>
       </div>
-    <!-- </div> -->
+      <!-- </div> -->
     </MuroDeCarga>
     <InputBox
       v-if="bShowInputBox"
-      :Titulo="'Legajo'"
+      :Titulo="sColumna"
       :Default="valoramostrar"
       @Listo="Resultado"
     ></InputBox>
@@ -76,12 +71,21 @@
               {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
             </div>
           </th>
-          <th scope="col">Estado</th>
+          <th scope="col">
+            <div>Mostrar Eliminados: <input type="checkbox" v-model="bMostrarEliminados" @change="ListarSolicitudes()" /></div>
+            <div>Estado</div>
+            </th>
+            <th scope="col">Fecha</th>
           <th scope="col">Comandos</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(a, key) of lista_solicitudes" :key="key">
+        <tr
+          v-for="(a, key) of lista_solicitudes"
+          :key="key"
+          :class="esta == key ? 'selected' : ''"
+          @click="SeleccionarItem($event, key, a)"
+        >
           <th scope="row">{{ a.Legajo }}</th>
           <td>{{ a.full_name }}</td>
           <td>{{ a.cod_herramienta }}</td>
@@ -90,12 +94,26 @@
             {{ a.estado }}
           </td>
           <td>
+            {{ a.fecha_solicitud }}
+          </td>
+          <td>
             <div class="a-icon-group">
-              <div class="a-icon aplicar" title="Marcar como disponible" @click="ActualizarSolicitud(a.id,'DISPONIBLE')"></div>
-              <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
-              <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
+              <div
+                class="a-icon aplicar"
+                title="Marcar como disponible"
+                @click="ActualizarSolicitud(a.id, 'DISPONIBLE')"
+              ></div>
+              <div
+                class="a-icon editar"
+                title="Editar"
+                @click="ActualizarSolicitud(a.id)"
+              ></div>
+              <div
+                class="a-icon eliminar"
+                title="Eliminar solicitud"
+                @click="EliminarSolicitud(a.id)"
+              ></div>
             </div>
-            
           </td>
         </tr>
       </tbody>
@@ -107,7 +125,11 @@
     >
       Anterior
     </button>
-    <button class="btn bt-outline-primary" @click="SiguienteNivel">
+    <button
+      class="btn bt-outline-primary"
+      @click="SiguienteNivel"
+      :disabled="lista_solicitudes.length < 6"
+    >
       Siguiente
     </button>
   </div>
@@ -119,7 +141,7 @@ import MuroDeCarga from "../components/MuroDeCarga.vue";
 
 export default {
   name: "CargarOperarios",
-  components: { InputBox ,MuroDeCarga},
+  components: { InputBox, MuroDeCarga },
   data() {
     return {
       op_legajo: "",
@@ -143,9 +165,17 @@ export default {
       nuevo_estado: "AGREGAR",
       nro_solicitud: "",
       nueva_fecha: "",
+      esta: null,
+      oItemSeleccionado: null,
+      bMostrarEliminados:false
     };
   },
   methods: {
+    SeleccionarItem: function (event, key, objeto) {
+      console.log(objeto);
+      this.esta = key;
+      this.oItemSeleccionado = objeto;
+    },
     Resultado: function (valor) {
       //Resultado del inputbox
       switch (this.sColumna) {
@@ -212,27 +242,29 @@ export default {
         .then((res) => res.text())
         .then((res) => that.DatosSolicitudRecibidos(res));
     },
-    
+
     DatosSolicitudRecibidos: function (datos) {
       this.bIngresoDatos = false;
       this.nuevo_estado = "";
       this.id_solicitud = -1;
       console.log(datos);
     },
-    
-    ActualizarSolicitud: function (id_sol,estado) {
+
+    ActualizarSolicitud: function (id_sol, estado) {
       this.id_solicitud = id_sol;
       this.bIngresoDatos = true;
 
-      if(estado=="DISPONIBLE"){
-        this.nuevo_estado="DISPONIBLE";
+      if (estado == "DISPONIBLE") {
+        this.nuevo_estado = "DISPONIBLE";
         this.nro_solicitud = id_sol;
         let v = new Date();
         let sFecha = v.getFullYear() + "-";
-        sFecha+= (v.getMonth()+1<10?"0":"") +(v.getMonth()+1)+"-";
-        sFecha+= (v.getDate()<10?"0":"")+v.getDate();
-        this.nueva_fecha=sFecha;
+        sFecha += (v.getMonth() + 1 < 10 ? "0" : "") + (v.getMonth() + 1) + "-";
+        sFecha += (v.getDate() < 10 ? "0" : "") + v.getDate();
+        this.nueva_fecha = sFecha;
         this.enviarClick();
+      }else{
+        //La solicitud es para editar
       }
     },
 
@@ -249,10 +281,9 @@ export default {
       this.bIngresoDatos = true;
       this.id_solicitud = id_sol;
       console.log(id_sol);
-      
-      
+
       var formData = new FormData();
-      formData.append("id_sol", that.id_solicitud);      
+      formData.append("id_sol", that.id_solicitud);
 
       // request options
       const options = {
@@ -266,7 +297,6 @@ export default {
         .then((res) => that.DatosSolicitudRecibidos(res));
     },
 
-
     ListarSolicitudes: function () {
       let that = this;
       console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1));
@@ -277,6 +307,8 @@ export default {
       formData.append("codigo", that.filtro_codigo);
       formData.append("nombre", that.filtro_nombre);
       formData.append("descripcion", that.filtro_descripcion);
+      formData.append("bMostrarEliminados",that.bMostrarEliminados);
+
       //console.log(formData);
       //formData.append("nombre", that.op_nombre);
       //formData.append("sector", that.op_sector);
@@ -387,6 +419,9 @@ export default {
   z-index: 99999;
 }
 
+tr.selected {
+  border: 2px solid black;
+}
 
 .a-icon-group {
   display: flex;

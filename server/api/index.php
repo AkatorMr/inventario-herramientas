@@ -51,24 +51,29 @@
         $codigo = $_POST["codigo"];
         $nombre = $_POST["nombre"];
         $descripcion = $_POST["descripcion"];
-
+        
+        $bME = "true";
+        if(!empty($_POST["bMostrarEliminados"]))
+            $bME = $_POST["bMostrarEliminados"];
 
         $inicio = $sub_comando*6;
 
-        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado";
+        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado, s.fecha_solicitud";
         $sql.= " FROM `solicitudes` s";
         $sql.= " INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)";
         $sql.= " INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)";
         $sql.= " WHERE s.estado != 'CONSUMIDA'";
-        $sql.=" AND h.Codigo LIKE '%$codigo%'";
-        $sql.=" AND h.Descripcion LIKE '%$descripcion%'";
-        $sql.=" AND o.Legajo LIKE '%$legajo%'";
-        $sql.=" AND (o.Nombre LIKE '%$nombre%'";
-        $sql.=" OR o.Apellido LIKE '%$nombre%')";
+        if($bME == "false")
+            $sql.= " AND s.estado != 'ELIMINADA'";
+        $sql.= " AND h.Codigo LIKE '%$codigo%'";
+        $sql.= " AND h.Descripcion LIKE '%$descripcion%'";
+        $sql.= " AND o.Legajo LIKE '%$legajo%'";
+        $sql.= " AND (o.Nombre LIKE '%$nombre%'";
+        $sql.= " OR o.Apellido LIKE '%$nombre%')";
 
         $sql.=" ORDER BY o.Legajo LIMIT $inicio,6;";
         //echo $sql;
-
+        //echo $bME;
         SF($sql);
         exit();
     }else if(strpos($comando,"ListarConsumosEstadistica")!==FALSE){
