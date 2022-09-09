@@ -378,6 +378,10 @@
         if($legajo != $legajo_original){
             $sql.= "UPDATE `consumos` SET `legajo_operario` = '$legajo'";
             $sql.= " WHERE `legajo_operario`='$legajo_original';";
+
+            //UPDATE `inventario`.`solicitudes` SET `legajo_operario` = '112121' WHERE `solicitudes`.`id` =1;
+            $sql.= "UPDATE `solicitudes` SET `legajo_operario` = '$legajo'";
+            $sql.= " WHERE `legajo_operario`='$legajo_original';";
         }
 
         //echo $sql;
