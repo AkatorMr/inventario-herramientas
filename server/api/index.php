@@ -352,7 +352,9 @@
         $nombre = $_POST["nombre"];
         $sector = $_POST["sector"];
 
-        $bypass = $_POST["pass"]=="by";
+        $bypass = false;
+        if(isset($_POST["pass"]))
+            $bypass = $_POST["pass"]=="by";
 
         if($legajo != $legajo_original && !$bypass){
             $sql = "SELECT * FROM operarios WHERE legajo='$legajo'";
