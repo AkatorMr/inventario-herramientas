@@ -113,7 +113,7 @@
         $sql.=" AND operarios.Legajo LIKE '%$legajo%'";
         $sql.=" AND (operarios.Nombre LIKE '%$nombre%'";
         $sql.=" OR operarios.Apellido LIKE '%$nombre%')";
-        $sql.=" GROUP BY herramientas.Codigo";
+        $sql.=" GROUP BY herramientas.Codigo, operarios.Legajo";
         $sql.=" ORDER BY operarios.Legajo, herramientas.Codigo LIMIT $inicio,15;";
 
         //echo $sql;
