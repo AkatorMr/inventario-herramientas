@@ -15,3 +15,4 @@
 - [ ] Agregar filtro a las solicitudes por estado.
 - [ ] Agregar seguridad a la hora de cargar consumos, algo que relacione el nombre con el legajo como las primeras letras del nombre.
 - [ ] Agregar notificaciones de las consultas con el servidor
+- [ ] Revisar el "Marcar como disponible" de las solicitudes, parece que no anda.
