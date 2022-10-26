@@ -57,8 +57,8 @@
             $bME = $_POST["bMostrarEliminados"];
 
         $inicio = $sub_comando*6;
-
-        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, h.Descripcion, s.estado, s.fecha_solicitud";
+        //SELECT COUNT(*)
+        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, CONCAT(h.Descripcion, ' (', COUNT(s.cod_herramienta) , ')') Descripcion, s.estado, s.fecha_solicitud";
         $sql.= " FROM `solicitudes` s";
         $sql.= " INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)";
         $sql.= " INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)";
@@ -70,7 +70,7 @@
         $sql.= " AND o.Legajo LIKE '%$legajo%'";
         $sql.= " AND (o.Nombre LIKE '%$nombre%'";
         $sql.= " OR o.Apellido LIKE '%$nombre%')";
-
+        $sql.= " GROUP BY h.Codigo, o.Legajo, s.estado";
         $sql.=" ORDER BY o.Legajo LIMIT $inicio,6;";
         //echo $sql;
         //echo $bME;
