@@ -167,9 +167,9 @@
             $cantidad = $a_cantidad[$i];
 
             //Esto vale oro
-            $sql = "SELECT `solicitudes`.`id` AS ide , `solicitudes`.`cod_herramienta` , `operarios`.`Nombre` FROM `solicitudes`
+            $sql = "SELECT `solicitudes`.`id` AS ide , `solicitudes`.`cod_herramienta` , `operarios`.`Nombre` AS `nombre` FROM `solicitudes`
             INNER JOIN `operarios` ON `solicitudes`.`legajo_operario` = `operarios`.`legajo` 
-            WHERE `nombre`='Almacen' 
+            WHERE ( `nombre`='Almacen' OR `operarios`.`legajo` = '000000' OR `operarios`.`legajo` = '$legajo' )
             AND `solicitudes`.`estado` = 'DISPONIBLE' 
             AND `solicitudes`.`cod_herramienta`='$codigo' 
             LIMIT 1;";
