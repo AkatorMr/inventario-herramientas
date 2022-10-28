@@ -2,8 +2,8 @@
   <div class="container">
     <MuroDeCarga :bMostrar="bIngresoDatos">
       <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
-      <div class="Recuadro">
-        <div class="text-center">
+      <div class="Recuadro" v-if="nuevo_estado != 'DISPONIBLE'" >
+        <div class="text-center" >
           <span>Cambiar Estado</span>
           <select class="form-select mb-6" aria-label="">
             <option
@@ -86,12 +86,18 @@
           :class="esta == key ? 'selected' : ''"
           @click="SeleccionarItem($event, key, a)"
         >
-          <th scope="row">{{ a.Legajo }}</th>
+          <th scope="row">{{ a.Legajo  }}</th>
           <td>{{ a.full_name }}</td>
           <td>{{ a.cod_herramienta }}</td>
           <td>{{ a.Descripcion }}</td>
           <td>
+
+            <!-- i v-if="a.estado=='DISPONIBLE'" class="fa-solid fa-check-double"></i>
+            <i v-if="a.estado=='LISTA'" class="fa-solid fa-barcode-read"></i>
+            <i v-if="a.estado=='AGREGAR'" class="fa-solid fa-plus"></i>
+            <i v-if="a.estado=='CARGADO'" class="fa-solid fa-books-medical"></i> -->
             {{ a.estado }}
+
           </td>
           <td>
             {{ a.fecha_solicitud }}
@@ -248,6 +254,7 @@ export default {
       this.nuevo_estado = "";
       this.id_solicitud = -1;
       console.log(datos);
+      this.ListarSolicitudes();
     },
 
     ActualizarSolicitud: function (id_sol, estado) {
@@ -255,6 +262,7 @@ export default {
       this.bIngresoDatos = true;
 
       if (estado == "DISPONIBLE") {
+        this.bIngresoDatos = false;
         this.nuevo_estado = "DISPONIBLE";
         this.nro_solicitud = id_sol;
         let v = new Date();
