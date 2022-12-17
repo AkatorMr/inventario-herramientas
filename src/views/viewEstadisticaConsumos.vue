@@ -47,9 +47,9 @@
           </th>
           <th scope="col">
             <span>Cantidad</span>
-            <div @click="Filtro('Cantidad')">
+            <!-- <div @click="Filtro('Cantidad')">
               {{ filtro_cantidad == "" ? "#######" : filtro_cantidad }}
-            </div>
+            </div> -->
           </th>
         </tr>
       </thead>
@@ -203,9 +203,7 @@ export default {
 
       var formData = new FormData();
 
-      formData.append("legajo", that.filtro_legajo);
       formData.append("codigo", that.filtro_codigo);
-      formData.append("nombre", that.filtro_nombre);
       formData.append("descripcion", that.filtro_descripcion);
       //console.log(formData);
       //formData.append("nombre", that.op_nombre);

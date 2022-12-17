@@ -17,3 +17,4 @@
 - [ ] Agregar notificaciones de las consultas con el servidor
 - [ ] Revisar el "Marcar como disponible" de las solicitudes, parece que no anda.
 - [ ] Agregar botón "Ordenar Por" en las tablas.
+- [ ] Agregar cierre de caja, por semana, mes y año
