@@ -21,7 +21,11 @@ export default {
   methods: {
     Mostrar() {},
     click2(obj){
-      this.$emit("click",obj)
+      this.$emit("click",obj);
+      this.$emit("dismis",obj);
+    },
+    click3(obj){
+      this.$emit("dismis",obj)
     }
   },
 };

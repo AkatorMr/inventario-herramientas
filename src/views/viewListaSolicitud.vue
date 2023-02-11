@@ -1,24 +1,21 @@
 <template>
   <div class="container">
-    <MuroDeCarga :bMostrar="bIngresoDatos">
+    <MuroDeCarga :bMostrar="bIngresoDatos" @dismis="bIngresoDatos=false">
       <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
-      <div class="Recuadro" v-if="nuevo_estado != 'DISPONIBLE'" >
-        <div class="text-center" >
+      <div class="Recuadro" v-if="nuevo_estado != 'DISPONIBLE'">
+        <div class="text-center">
           <span>Cambiar Estado</span>
-          <select class="form-select mb-6" aria-label="">
-            <option
-              v-for="(item, index) in [
-                'LISTA',
-                'PERDIDA',
-                'CARGADO',
-                'DISPONIBLE',
-                'LLEGO',
-                'GENERAR',
-                'AGREGAR',
-                'CONSUMIDA',
-              ]"
-              :key="index"
-            >
+          <select class="form-control form-select" aria-label="">
+            <option v-for="(item, index) in [
+              'LISTA',
+              'PERDIDA',
+              'CARGADO',
+              'DISPONIBLE',
+              'LLEGO',
+              'GENERAR',
+              'AGREGAR',
+              'CONSUMIDA',
+            ]" :key="index">
               {{ item }}
             </option>
           </select>
@@ -37,12 +34,8 @@
       </div>
       <!-- </div> -->
     </MuroDeCarga>
-    <InputBox
-      v-if="bShowInputBox"
-      :Titulo="sColumna"
-      :Default="valoramostrar"
-      @Listo="Resultado"
-    ></InputBox>
+    
+    <InputBox v-if="bShowInputBox" :Titulo="sColumna" :Default="valoramostrar" @Listo="Resultado"></InputBox>
 
     <table class="table">
       <thead>
@@ -72,21 +65,22 @@
             </div>
           </th>
           <th scope="col">
-            <div>Mostrar Eliminados: <input type="checkbox" v-model="bMostrarEliminados" @change="ListarSolicitudes()" /></div>
+            
+            <div>Mostrar Eliminados: <input type="checkbox" v-model="bMostrarEliminados"
+                @change="ListarSolicitudes()" /></div>
             <div>Estado</div>
-            </th>
-            <th scope="col">Fecha</th>
+            <div @click="Filtro('Estado')">
+              {{ filtroEstado == "" ? "#######" : filtroEstado }}
+            </div>
+          </th>
+          <th scope="col">Fecha</th>
           <th scope="col">Comandos</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(a, key) of lista_solicitudes"
-          :key="key"
-          :class="esta == key ? 'selected' : ''"
-          @click="SeleccionarItem($event, key, a)"
-        >
-          <th scope="row">{{ a.Legajo  }}</th>
+        <tr v-for="(a, key) of lista_solicitudes" :key="key" :class="esta == key ? 'selected' : ''"
+          @click="SeleccionarItem($event, key, a)">
+          <th scope="row">{{ a.Legajo }}</th>
           <td>{{ a.full_name }}</td>
           <td>{{ a.cod_herramienta }}</td>
           <td>{{ a.Descripcion }}</td>
@@ -104,38 +98,19 @@
           </td>
           <td>
             <div class="a-icon-group">
-              <div
-                class="a-icon aplicar"
-                title="Marcar como disponible"
-                @click="ActualizarSolicitud(a.id, 'DISPONIBLE')"
-              ></div>
-              <div
-                class="a-icon editar"
-                title="Editar"
-                @click="ActualizarSolicitud(a.id)"
-              ></div>
-              <div
-                class="a-icon eliminar"
-                title="Eliminar solicitud"
-                @click="EliminarSolicitud(a.id)"
-              ></div>
+              <div class="a-icon aplicar" title="Marcar como disponible"
+                @click="ActualizarSolicitud(a.id, 'DISPONIBLE')"></div>
+              <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
+              <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <button
-      class="btn bt-outline-primary"
-      @click="AnteriorNivel"
-      :disabled="nivel < 2"
-    >
+    <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="nivel < 2">
       Anterior
     </button>
-    <button
-      class="btn bt-outline-primary"
-      @click="SiguienteNivel"
-      :disabled="lista_solicitudes.length < 6"
-    >
+    <button class="btn bt-outline-primary" @click="SiguienteNivel" :disabled="lista_solicitudes.length < 6">
       Siguiente
     </button>
   </div>
@@ -173,7 +148,8 @@ export default {
       nueva_fecha: "",
       esta: null,
       oItemSeleccionado: null,
-      bMostrarEliminados:false
+      bMostrarEliminados: false,
+      filtroEstado: ""
     };
   },
   methods: {
@@ -201,6 +177,10 @@ export default {
           this.filtro_descripcion = valor;
           this.sColumna = "";
           break;
+        case "Estado":
+          this.filtroEstado = valor;
+          this.sColumna = "";
+          break;
       }
       this.ListarSolicitudes();
       this.bShowInputBox = false;
@@ -222,7 +202,9 @@ export default {
           break;
         case "Descripcion":
           this.valoramostrar = this.filtro_descripcion;
-
+          break;
+        case "Estado":
+          this.valoramostrar = this.filtroEstado;
           break;
       }
 
@@ -271,7 +253,7 @@ export default {
         sFecha += (v.getDate() < 10 ? "0" : "") + v.getDate();
         this.nueva_fecha = sFecha;
         this.enviarClick();
-      }else{
+      } else {
         //La solicitud es para editar
       }
     },
@@ -315,9 +297,10 @@ export default {
       formData.append("codigo", that.filtro_codigo);
       formData.append("nombre", that.filtro_nombre);
       formData.append("descripcion", that.filtro_descripcion);
-      formData.append("bMostrarEliminados",that.bMostrarEliminados);
+      formData.append("bMostrarEliminados", that.bMostrarEliminados);
+      formData.append("filtroEstado", that.filtroEstado);
 
-      //console.log(formData);
+      
       //formData.append("nombre", that.op_nombre);
       //formData.append("sector", that.op_sector);
       // request options
@@ -393,27 +376,34 @@ export default {
   z-index: 99991;
   border: solid 1px black;
 }
+
 .Recuadro .form-control {
   width: 90% !important;
   margin: auto;
   margin-bottom: 5px;
 }
-.ajustar-ancho > th:nth-child(1) {
+
+.ajustar-ancho>th:nth-child(1) {
   width: 117px;
 }
-.ajustar-ancho > th:nth-child(2) {
+
+.ajustar-ancho>th:nth-child(2) {
   width: 121px;
 }
-.ajustar-ancho > th:nth-child(3) {
+
+.ajustar-ancho>th:nth-child(3) {
   width: 160px;
 }
-.ajustar-ancho > th:nth-child(4) {
+
+.ajustar-ancho>th:nth-child(4) {
   width: 475px;
 }
-.ajustar-ancho > th:nth-child(5) {
+
+.ajustar-ancho>th:nth-child(5) {
   width: 120px;
 }
-.ajustar-ancho > th:nth-child(6) {
+
+.ajustar-ancho>th:nth-child(6) {
   width: 120px;
 }
 
@@ -434,6 +424,7 @@ tr.selected {
 .a-icon-group {
   display: flex;
 }
+
 .a-icon {
   width: 32px;
   height: 32px;
@@ -451,12 +442,15 @@ tr.selected {
 .a-icon.aplicar {
   background-image: url("./../assets/aplicar.png");
 }
+
 .a-icon.editar {
   background-image: url("./../assets/edit.png");
 }
+
 .a-icon.eliminar {
   background-image: url("./../assets/eliminar.gif");
 }
+
 .a-icon.seleccionar {
   background-image: url("./../assets/seleccionar.png");
 }
