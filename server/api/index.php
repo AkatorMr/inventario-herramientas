@@ -51,6 +51,11 @@
         $codigo = $_POST["codigo"];
         $nombre = $_POST["nombre"];
         $descripcion = $_POST["descripcion"];
+
+        $filtroEstado = "";
+        if(!empty($_POST["filtroEstado"]))
+            $filtroEstado = $_POST["filtroEstado"];
+
         
         $bME = "true";
         if(!empty($_POST["bMostrarEliminados"]))
@@ -68,6 +73,7 @@
         $sql.= " AND h.Codigo LIKE '%$codigo%'";
         $sql.= " AND h.Descripcion LIKE '%$descripcion%'";
         $sql.= " AND o.Legajo LIKE '%$legajo%'";
+        $sql.= " AND s.estado LIKE '%$filtroEstado%'";
         $sql.= " AND (o.Nombre LIKE '%$nombre%'";
         $sql.= " OR o.Apellido LIKE '%$nombre%')";
         $sql.= " GROUP BY h.Codigo, o.Legajo, s.estado";
