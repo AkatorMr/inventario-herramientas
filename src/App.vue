@@ -18,6 +18,9 @@
         <span>
           ><router-link to="/solicitud/lista">Lista de solicitudes</router-link>
         </span>
+        <span>
+          ><router-link to="/solicitud/lista/pedidos">Lista de Pedidos</router-link>
+        </span>
       </router-link>
       |
       <router-link to="/addope">Operarios</router-link> |

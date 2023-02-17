@@ -63,7 +63,7 @@
 
         $inicio = $sub_comando*6;
         //SELECT COUNT(*)
-        $sql = "SELECT s.id, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, CONCAT(h.Descripcion, ' (', COUNT(s.cod_herramienta) , ')') Descripcion, s.estado, s.fecha_solicitud";
+        $sql = "SELECT s.id, s.id_solicitud_compra as id_solicitud_compra, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, CONCAT(h.Descripcion, ' (', COUNT(s.cod_herramienta) , ')') Descripcion, s.estado, s.fecha_solicitud";
         $sql.= " FROM `solicitudes` s";
         $sql.= " INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)";
         $sql.= " INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)";
@@ -78,6 +78,32 @@
         $sql.= " OR o.Apellido LIKE '%$nombre%')";
         $sql.= " GROUP BY h.Codigo, o.Legajo, s.estado";
         $sql.=" ORDER BY o.Legajo LIMIT $inicio,6;";
+        //echo $sql;
+        //echo $bME;
+        SF($sql);
+        exit();
+    }else if(strpos($comando,"ListarPedidos")!==FALSE){
+       
+        $sql = "SELECT id_solicitud_compra AS pedido, COUNT( id_solicitud_compra ) AS cantidaditems ";
+        $sql.= "FROM `solicitudes` ";
+        $sql.= "WHERE `estado` <> 'AGREGAR' ";
+        $sql.= "AND `estado` <> 'ELIMINADO' ";
+        $sql.= "GROUP BY id_solicitud_compra;";
+        
+        //echo $sql;
+        //echo $bME;
+        SF($sql);
+        exit();
+    }else if(strpos($comando,"MostrarDetalles")!==FALSE){
+
+        $nroPedido = $_POST["nroPedido"];
+       
+
+        $sql = "SELECT sol.cod_herramienta AS codigo, her.Descripcion as descripcion ";
+        $sql.= "FROM `solicitudes` sol ";
+        $sql.= "INNER JOIN `herramientas` her ON (sol.cod_herramienta = her.Codigo) ";
+        $sql.= "WHERE `id_solicitud_compra`='$nroPedido' ";
+        
         //echo $sql;
         //echo $bME;
         SF($sql);
@@ -299,6 +325,23 @@
         $id_sol = $_POST["id_sol"];
         $estado = $_POST["estado"];
         $fecha = $_POST["fecha"];
+        if($estado == "CARGADO"){
+            $sc = $_POST["nro_sc"];
+            $editar ="";
+            if(!empty($sc))
+                $editar.="`id_solicitud_compra` = '$sc', ";
+
+            $sql = "UPDATE `solicitudes` SET ".$editar."`estado` = '$estado' WHERE `id`='$id_sol';";
+            //echo $sql;
+            if(IN($sql)){
+                echo json_encode("ac");
+                exit();
+            }
+            echo json_encode("error");
+            exit();
+        }
+
+        
         $nro_solicitud = $_POST["nro_solicitud"];
         
         $editar = "";

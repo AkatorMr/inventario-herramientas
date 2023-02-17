@@ -11,7 +11,9 @@
 - [ ] En lista de consumos, agregar comando para pasar de un operario a otro
 - [ ] Agregar forma de cargar muchos consumos de una sola vez, en tandem o bach o con un archivo csv
 - [ ] Seleccionar las solicitudes y cambiarles el estado a "Para Pedir"
-- [ ] Generar vista donde se agrupan las solicitudes con el mismo pedido
+- [o] Generar vista donde se agrupan las solicitudes con el mismo pedido
+- [x] Generar una vista que muestre todos los pedidos, con la opción de ver detalle de los mismos
+- [x] Seleccionar solicitud y cargarle un pedido
 - [x] Agregar filtro a las solicitudes por estado.
 - [ ] Agregar seguridad a la hora de cargar consumos, algo que relacione el nombre con el legajo como las primeras letras del nombre.
 - [ ] Agregar notificaciones de las consultas con el servidor

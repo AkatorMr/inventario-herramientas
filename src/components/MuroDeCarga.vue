@@ -1,5 +1,5 @@
 <template>
-  <div class="MuroDeCarga" v-if="bMostrar" @click="click2">
+  <div class="MuroDeCarga" v-if="bMostrar" @click.self="click2">
     <slot></slot>
   </div>
 </template>

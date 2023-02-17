@@ -11,6 +11,7 @@ import viewListaConsumo from "../views/viewListaConsumos.vue"
 import viewPruebas from "../views/viewPruebas.vue"
 import viewAnalizar from "../analizar/viewAnalizar.vue"
 import viewEstadisticaConsumo from "../views/viewEstadisticaConsumos.vue"
+import viewListaSolicitudPedidos from "../views/viewListaSolicitudPedido.vue"
 
 
 Vue.use(VueRouter)
@@ -43,6 +44,7 @@ const routes = [
   },
   { path: '/solicitud', name: 'Solicitud', component: viewSolicitud },
   { path: '/solicitud/lista', name: 'ListaSolicitud', component: viewListaSolicitud },
+  { path: '/solicitud/lista/pedidos', name: 'ListaPedidos', component: viewListaSolicitudPedidos },
   {
     path: '/addope',
     name: 'Add-Operario',

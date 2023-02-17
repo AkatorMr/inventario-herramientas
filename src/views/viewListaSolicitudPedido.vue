@@ -1,131 +1,61 @@
 <template>
   <div class="container">
-    <MuroDeCarga :bMostrar="bIngresoDatos" @dismis="bIngresoDatos = false">
-      <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
-      <div class="Recuadro" v-if="nuevo_estado != 'DISPONIBLE'">
-        <div class="text-center">
-          <span>Cambiar Estado</span>
-          <select class="form-control form-select" aria-label="">
-            <option v-for="(item, index) in [
-              'LISTA',
-              'PERDIDA',
-              'CARGADO',
-              'DISPONIBLE',
-              'LLEGO',
-              'GENERAR',
-              'AGREGAR',
-              'CONSUMIDA',
-            ]" :key="index">
-              {{ item }}
-            </option>
-          </select>
-        </div>
-        <div class="text-center">
-          <span>Nro Solicitud</span>
-          <input class="form-control" v-model="nro_solicitud" />
-        </div>
-        <div class="text-center">
-          <span>Fecha</span>
-          <input class="form-control" type="date" v-model="nueva_fecha" />
-        </div>
-        <div class="text-center">
-          <button class="btn btn-primary" @click="enviarClick">Aceptar</button>
-        </div>
-      </div>
-      <!-- </div> -->
-    </MuroDeCarga>
-
-    <MuroDeCarga :bMostrar="sPedido.bMostrar" @dismis="sPedido.bMostrar = false">
-      <div class="Recuadro">
-        <div class="text-center">
-          <span>Registrar en pedido</span>
-          <input class="form-control" v-model="sPedido.nro_pedido" />
-        </div>
-        <div class="text-center">
-          <span>Fecha</span>
-          <input class="form-control" type="date" v-model="sPedido.nueva_fecha" />
-        </div>
-        <div class="text-center">
-          <button class="btn btn-primary" @click="registrarEnPedido">Aceptar</button>
-        </div>
-      </div>
-    </MuroDeCarga>
-
-
-    <InputBox v-if="bShowInputBox" :Titulo="sColumna" :Default="valoramostrar" @Listo="Resultado"></InputBox>
 
     <table class="table">
       <thead>
         <tr class="ajustar-ancho">
           <th scope="col">
-            Legajo
-            <div @click="Filtro('Legajo')">
-              {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
-            </div>
+            Pedido Nro
           </th>
           <th scope="col">
-            Nombre y Apellido
-            <div @click="Filtro('Nombre')">
-              {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
-            </div>
+            Cantidad Items
           </th>
-          <th scope="col">
-            Código
-            <div @click="Filtro('Codigo')">
-              {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
-            </div>
-          </th>
-          <th scope="col" style="width: 44%">
-            Descripción
-            <div @click="Filtro('Descripcion')">
-              {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
-            </div>
-          </th>
-          <th scope="col">
 
-            <div>Mostrar Eliminados: <input type="checkbox" v-model="bMostrarEliminados"
-                @change="ListarSolicitudes()" /></div>
-            <div>Estado</div>
-            <div @click="Filtro('Estado')">
-              {{ filtroEstado == "" ? "#######" : filtroEstado }}
-            </div>
-          </th>
-          <th scope="col">Fecha</th>
           <th scope="col">Comandos</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(a, key) of lista_solicitudes" :key="key" :class="esta == key ? 'selected' : ''"
+        <tr v-for="(a, key) of lstPedidos" :key="key" :class="esta == key ? 'selected' : ''"
           @click="SeleccionarItem($event, key, a)">
-          <th scope="row">{{ a.Legajo }}</th>
-          <td>{{ a.full_name }}</td>
-          <td>{{ a.cod_herramienta }}</td>
-          <td>{{ a.Descripcion }}</td>
-          <td>
 
-            <!-- i v-if="a.estado=='DISPONIBLE'" class="fa-solid fa-check-double"></i>
-            <i v-if="a.estado=='LISTA'" class="fa-solid fa-barcode-read"></i>
-            <i v-if="a.estado=='AGREGAR'" class="fa-solid fa-plus"></i>
-            <i v-if="a.estado=='CARGADO'" class="fa-solid fa-books-medical"></i> -->
-            {{ a.estado }}
+          <td scope="row">{{ a.pedido }}</td>
+          <td>{{ a.cantidaditems }}</td>
 
-          </td>
           <td>
-            {{ a.fecha_solicitud }}
-          </td>
-          <td>
-            <div class="a-icon-group">
-              <div class="a-icon flecha" @click="ActualizarSolicitud(a.id, 'PEDIDO')" title="Cargar en pedido">&#9654;
-              </div>
-              <div class="a-icon aplicar" title="Marcar como disponible"
-                @click="ActualizarSolicitud(a.id, 'DISPONIBLE')"></div>
-              <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
-              <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
-            </div>
+            <button class="btn btn-outline-info" @click="MostrarDetalle(a.pedido)">Detalle</button>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <div class="container" @if="Detalle.bMostrar">
+      <table class="table">
+        <thead>
+          <tr class="ajustar-ancho">
+            <th scope="col" style="width: 18%;">
+              C&oacute;digo
+            </th>
+            <th scope="col">
+              Decripci&oacute;n
+            </th>
+
+            <th scope="col" style="width: 18%;">Comandos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(a, key) of Detalle.lstItems" :key="key">
+
+            <td scope="row">{{ a.codigo }}</td>
+            <td>{{ a.descripcion }}</td>
+
+            <td>
+              <!-- <button class="btn btn-outline-info" @click="MostrarDetalle(a.pedido)">Detalle</button> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="nivel < 2">
       Anterior
     </button>
@@ -136,12 +66,10 @@
 </template>
 
 <script>
-import InputBox from "../components/InputBox.vue";
-import MuroDeCarga from "../components/MuroDeCarga.vue";
 
 export default {
-  name: "CargarOperarios",
-  components: { InputBox, MuroDeCarga },
+  name: "ListaDePedidos",
+  components: {},
   data() {
     return {
       op_legajo: "",
@@ -169,10 +97,51 @@ export default {
       oItemSeleccionado: null,
       bMostrarEliminados: false,
       filtroEstado: "",
-      sPedido: { id_sol: 0, bMostrar: false, nro_pedido: 0, nueva_fecha: "" }
+      sPedido: { id_sol: 0, bMostrar: false, nro_pedido: 0, nueva_fecha: "" },
+      Detalle: { bMostrar: false, lstItems: [], nroPedido: 0 },
+      lstPedidos: []
     };
   },
   methods: {
+    ListarPedidos: function (json) {
+      if (json != undefined) {
+        this.lstPedidos = json;
+
+        return;
+      }
+      fetch("/api/index.php?ListarPedidos")
+        .then((res) => res.json())
+        .then((res) => this.ListarPedidos(res));
+    },
+    MostrarDetalle: function (nro_pedido) {
+      this.Detalle.bMostrar = false;
+      this.Detalle.lstItems = [];
+      this.Detalle.nroPedido = nro_pedido;
+
+      this.ObtenerDetalle();
+    },
+    ObtenerDetalle(json) {
+      if (json != undefined) {
+        this.Detalle.lstItems = json;
+        this.Detalle.bMostrar = true;
+        return;
+      }
+      var formData = new FormData();
+      formData.append("nroPedido", this.Detalle.nroPedido);
+      //console.log(this.sPedido);
+      //return;
+      // request options
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+
+      // send POST request
+      fetch("/api/index.php?MostrarDetalles", options)
+        .then((res) => res.json())
+        .then((res) => this.ObtenerDetalle(res));
+    },
+
     SeleccionarItem: function (event, key, objeto) {
       console.log(objeto);
       this.esta = key;
@@ -350,7 +319,7 @@ export default {
       formData.append("nombre", that.filtro_nombre);
       formData.append("descripcion", that.filtro_descripcion);
       formData.append("bMostrarEliminados", that.bMostrarEliminados);
-      formData.append("filtroEstado", that.filtroEstado);
+      formData.append("filtroEstado", "CARGADO");
 
 
       //formData.append("nombre", that.op_nombre);
@@ -410,7 +379,7 @@ export default {
     },
   },
   mounted() {
-    this.ListarSolicitudes();
+    this.ListarPedidos();
   },
 };
 </script>
