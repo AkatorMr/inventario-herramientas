@@ -2,7 +2,8 @@
     include "conexion.php";
     function MPLog($data){
         $fp = fopen("log.txt","a+");
-        fprintf($fp,$data."\n");
+        //fprintf($fp, $data."\n");
+        fwrite($fp, $data."\n");
         fclose($fp);
     }
     $comando = (array_keys($_GET));
@@ -78,7 +79,7 @@
         $sql.= " OR o.Apellido LIKE '%$nombre%')";
         $sql.= " GROUP BY h.Codigo, o.Legajo, s.estado";
         $sql.=" ORDER BY o.Legajo LIMIT $inicio,6;";
-        //echo $sql;
+        MPLog($sql);
         //echo $bME;
         SF($sql);
         exit();
@@ -379,7 +380,7 @@
         die();
     }else if(strpos($comando,"EliminarSolicitud")!==FALSE){
         $id_sol = $_POST["id_sol"];
-        
+        $fecha = $_POST["fecha"];
         $editar = "`fecha_solicitud` = '$fecha', ";
                    
         $sql = "UPDATE `solicitudes` SET ".$editar."`estado` = 'ELIMINADA' WHERE `id`='$id_sol';";
