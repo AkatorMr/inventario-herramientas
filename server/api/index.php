@@ -89,7 +89,9 @@
         $sql.= "FROM `solicitudes` ";
         $sql.= "WHERE `estado` <> 'AGREGAR' ";
         $sql.= "AND `estado` <> 'ELIMINADO' ";
-        $sql.= "GROUP BY id_solicitud_compra;";
+        $sql.= "GROUP BY id_solicitud_compra ";
+        $sql.= "ORDER BY id_solicitud_compra DESC;";
+        
         
         //echo $sql;
         //echo $bME;
