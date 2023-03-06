@@ -8,9 +8,14 @@
     }
     $comando = (array_keys($_GET));
 
-    
-    if(count($comando)==0)
+    if(count($comando)==0){
+        include_once("Router.php");
+        include_once("app.php");
+
+        $router = Router::getInstance();
+        $router->execute($_SERVER["REQUEST_URI"]);
         exit();
+    }
         
     $sub_comando="";
     if(isset($_GET['nivel']))
@@ -468,6 +473,7 @@
         exit();
     }
 
+    
     
 
 ?>
