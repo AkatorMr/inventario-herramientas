@@ -14,6 +14,19 @@
 
         echo json_encode($rows);
     }
+    function SFr($sql){
+        
+        global $mysqli;
+        $res = $mysqli->query($sql);
+        
+        $rows = array();
+        
+        while($row = $res->fetch_assoc()){
+            $rows[] = $row;
+        }
+
+        return json_encode($rows);
+    }
     function IN($sql){
         global $mysqli;
         $res = $mysqli->query($sql);

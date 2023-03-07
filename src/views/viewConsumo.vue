@@ -266,7 +266,7 @@ export default {
     
     ListarOperarios: function () {
       let that = this;
-      fetch("/api/index.php?ListarOperarios")
+      fetch("/api/ListarOperarios")
         .then((response) => response.json())
         .then(
           (resp) => that.FiltrarOperarios(resp)

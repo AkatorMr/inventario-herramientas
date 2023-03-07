@@ -3,7 +3,7 @@
 class Router{
 
     private static $instance = null;
-    private $tree = [];
+    private $tree = array();
 
     private function __construct(){
 
@@ -20,7 +20,7 @@ class Router{
 
     public function addApiEntry($path,$func){
 
-        array_push($this->tree,array($path,$func));
+        array_push($this->tree,array("/api/".$path,$func));
 
     }
 

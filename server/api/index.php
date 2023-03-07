@@ -13,7 +13,7 @@
         include_once("app.php");
 
         $router = Router::getInstance();
-        $router->execute($_SERVER["REQUEST_URI"]);
+        echo $router->execute($_SERVER["REQUEST_URI"]);
         exit();
     }
         
