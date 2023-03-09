@@ -25,11 +25,34 @@ if (isset($_GET['nivel']))
 $comando = $comando[0];
 
 
+//Deprecated use new api form
 if (strpos($comando, "ListarOperarios") !== FALSE) {
     //Deprecated use new api form
     SF("SELECT * FROM operarios");
     exit();
-} else if (strpos($comando, "InsertarOperario") !== FALSE) {
+} else if (strpos($comando, "ListarPedidos") !== FALSE) {
+    //Deprecated use new api form
+    $sql = "SELECT id_solicitud_compra AS pedido, COUNT( id_solicitud_compra ) AS cantidaditems ";
+    $sql .= "FROM `solicitudes` ";
+    $sql .= "WHERE `estado` <> 'AGREGAR' ";
+    $sql .= "AND `estado` <> 'ELIMINADO' ";
+    $sql .= "GROUP BY id_solicitud_compra ";
+    $sql .= "ORDER BY id_solicitud_compra DESC;";
+
+
+    //echo $sql;
+    //echo $bME;
+    SF($sql);
+    exit();
+} else if (strpos($comando, "ListarCodigos") !== FALSE) {
+    //Deprecated use new api form
+    SF("SELECT `Codigo`,`Descripcion` FROM `herramientas`");
+
+    exit();
+}
+//Deprecated
+
+if (strpos($comando, "InsertarOperario") !== FALSE) {
 
 
     $legajo = $_POST["legajo"];
@@ -86,20 +109,6 @@ if (strpos($comando, "ListarOperarios") !== FALSE) {
     $sql .= " GROUP BY h.Codigo, o.Legajo, s.estado";
     $sql .= " ORDER BY o.Legajo LIMIT $inicio,6;";
     MPLog($sql);
-    //echo $bME;
-    SF($sql);
-    exit();
-} else if (strpos($comando, "ListarPedidos") !== FALSE) {
-    
-    $sql = "SELECT id_solicitud_compra AS pedido, COUNT( id_solicitud_compra ) AS cantidaditems ";
-    $sql .= "FROM `solicitudes` ";
-    $sql .= "WHERE `estado` <> 'AGREGAR' ";
-    $sql .= "AND `estado` <> 'ELIMINADO' ";
-    $sql .= "GROUP BY id_solicitud_compra ";
-    $sql .= "ORDER BY id_solicitud_compra DESC;";
-
-
-    //echo $sql;
     //echo $bME;
     SF($sql);
     exit();
@@ -166,11 +175,6 @@ if (strpos($comando, "ListarOperarios") !== FALSE) {
     SF($sql);
     exit();
 
-} else if (strpos($comando, "ListarCodigos") !== FALSE) {
-
-    SF("SELECT `Codigo`,`Descripcion` FROM `herramientas`");
-
-    exit();
 } else if (strpos($comando, "GenerarConsumo") !== FALSE) {
 
 

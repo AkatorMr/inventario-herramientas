@@ -200,7 +200,7 @@ export default {
     },
     ListarCódigos: function () {
       let that = this;
-      fetch("/api/index.php?ListarCodigos")
+      fetch("/api/ListarCodigos")
         .then((response) => response.json())
         .then((resp) => (that.lista_codigos = resp));
     },

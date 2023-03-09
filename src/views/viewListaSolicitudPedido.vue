@@ -109,7 +109,7 @@ export default {
 
         return;
       }
-      fetch("/api/index.php?ListarPedidos")
+      fetch("/api/ListarPedidos")
         .then((res) => res.json())
         .then((res) => this.ListarPedidos(res));
     },
