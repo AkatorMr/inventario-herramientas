@@ -18,6 +18,7 @@ $res = $mysqli->query($sql); */
 class SimpleRequest
 {
     private $sql = "";
+    private $block = array();
     public function __construct()
     {
 
@@ -35,23 +36,39 @@ class SimpleRequest
         return $this;
     }
 
-    public function Where($condition){
+    public function Where($condition)
+    {
         $this->sql .= "WHERE " . $condition . " ";
         return $this;
     }
 
-    public function OrderBy($array){
+    public function OrderBy($array)
+    {
+        if (in_array("ORDER BY", $this->block))
+            return $this;
         $this->sql .= "ORDER BY " . $array . " ";
+        $this->block[] = "ORDER BY";
         return $this;
     }
 
-    public function ASC(){
+
+    public function ASC()
+    {
+        if (in_array("ASC", $this->block))
+            return $this;
         $this->sql .= "ASC";
+        $this->block[] = "ASC";
+        $this->block[] = "DESC";
         return $this;
     }
 
-    public function DESC(){
+    public function DESC()
+    {
+        if (in_array("DESC", $this->block))
+            return $this;
         $this->sql .= "DESC";
+        $this->block[] = "ASC";
+        $this->block[] = "DESC";
         return $this;
     }
 
