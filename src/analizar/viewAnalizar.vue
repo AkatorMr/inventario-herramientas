@@ -78,7 +78,7 @@ export default {
     },
     ListarSolicitudes: function () {
       let that = this;
-      console.log("/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1));
+      console.log("/api/ListarSolicitudes?nivel=" + (this.nivel - 1));
 
       var formData = new FormData();
 
@@ -96,7 +96,7 @@ export default {
       };
 
       fetch(
-        "/api/index.php?ListarSolicitudes&nivel=" + (this.nivel - 1),
+        "/api/ListarSolicitudes?nivel=" + (this.nivel - 1),
         options
       )
         .then((response) => response.json())

@@ -30,7 +30,48 @@ $comando = $comando[0];
 
 //Deprecated use new api form
 
-if (strpos($comando, "InsertarOperario") !== FALSE) {
+if (strpos($comando, "ListarSolicitudes") !== FALSE) {
+    if (!is_numeric($sub_comando)) {
+        echo json_encode("error");
+        exit();
+    }
+
+    $legajo = $_POST["legajo"];
+    $codigo = $_POST["codigo"];
+    $nombre = $_POST["nombre"];
+    $descripcion = $_POST["descripcion"];
+
+    $filtroEstado = "";
+    if (!empty($_POST["filtroEstado"]))
+        $filtroEstado = $_POST["filtroEstado"];
+
+
+    $bME = "true";
+    if (!empty($_POST["bMostrarEliminados"]))
+        $bME = $_POST["bMostrarEliminados"];
+
+    $inicio = $sub_comando * 6;
+    //SELECT COUNT(*)
+    $sql = "SELECT s.id, s.id_solicitud_compra as id_solicitud_compra, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, CONCAT(h.Descripcion, ' (', COUNT(s.cod_herramienta) , ')') Descripcion, s.estado, s.fecha_solicitud";
+    $sql .= " FROM `solicitudes` s";
+    $sql .= " INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)";
+    $sql .= " INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)";
+    $sql .= " WHERE s.estado != 'CONSUMIDA'";
+    if ($bME == "false")
+        $sql .= " AND s.estado != 'ELIMINADA'";
+    $sql .= " AND h.Codigo LIKE '%$codigo%'";
+    $sql .= " AND h.Descripcion LIKE '%$descripcion%'";
+    $sql .= " AND o.Legajo LIKE '%$legajo%'";
+    $sql .= " AND s.estado LIKE '%$filtroEstado%'";
+    $sql .= " AND (o.Nombre LIKE '%$nombre%'";
+    $sql .= " OR o.Apellido LIKE '%$nombre%')";
+    $sql .= " GROUP BY h.Codigo, o.Legajo, s.estado";
+    $sql .= " ORDER BY o.Legajo LIMIT $inicio,6;";
+    MPLog($sql);
+    //echo $bME;
+    SF($sql);
+    exit();
+} else if (strpos($comando, "InsertarOperario") !== FALSE) {
 
 
     $legajo = $_POST["legajo"];
@@ -74,47 +115,6 @@ if (strpos($comando, "InsertarOperario") !== FALSE) {
  if (strpos($comando, "ListarSectores") !== FALSE) {
 
     SF("SELECT DISTINCT `Sector` FROM `operarios`");
-    exit();
-} else if (strpos($comando, "ListarSolicitudes") !== FALSE) {
-    if (!is_numeric($sub_comando)) {
-        echo json_encode("error");
-        exit();
-    }
-
-    $legajo = $_POST["legajo"];
-    $codigo = $_POST["codigo"];
-    $nombre = $_POST["nombre"];
-    $descripcion = $_POST["descripcion"];
-
-    $filtroEstado = "";
-    if (!empty($_POST["filtroEstado"]))
-        $filtroEstado = $_POST["filtroEstado"];
-
-
-    $bME = "true";
-    if (!empty($_POST["bMostrarEliminados"]))
-        $bME = $_POST["bMostrarEliminados"];
-
-    $inicio = $sub_comando * 6;
-    //SELECT COUNT(*)
-    $sql = "SELECT s.id, s.id_solicitud_compra as id_solicitud_compra, o.Legajo, CONCAT(o.Nombre, ' ', o.Apellido) full_name, s.cod_herramienta, CONCAT(h.Descripcion, ' (', COUNT(s.cod_herramienta) , ')') Descripcion, s.estado, s.fecha_solicitud";
-    $sql .= " FROM `solicitudes` s";
-    $sql .= " INNER JOIN `operarios` o ON (s.legajo_operario = o.Legajo)";
-    $sql .= " INNER JOIN `herramientas` h ON (s.cod_herramienta = h.Codigo)";
-    $sql .= " WHERE s.estado != 'CONSUMIDA'";
-    if ($bME == "false")
-        $sql .= " AND s.estado != 'ELIMINADA'";
-    $sql .= " AND h.Codigo LIKE '%$codigo%'";
-    $sql .= " AND h.Descripcion LIKE '%$descripcion%'";
-    $sql .= " AND o.Legajo LIKE '%$legajo%'";
-    $sql .= " AND s.estado LIKE '%$filtroEstado%'";
-    $sql .= " AND (o.Nombre LIKE '%$nombre%'";
-    $sql .= " OR o.Apellido LIKE '%$nombre%')";
-    $sql .= " GROUP BY h.Codigo, o.Legajo, s.estado";
-    $sql .= " ORDER BY o.Legajo LIMIT $inicio,6;";
-    MPLog($sql);
-    //echo $bME;
-    SF($sql);
     exit();
 } else if (strpos($comando, "MostrarDetalles") !== FALSE) {
 
