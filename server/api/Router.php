@@ -40,14 +40,33 @@ class Router
         } */
     }
 
+    public function contains($requested)
+    {
+
+        //Eliminamos el separador del get
+        $t = explode("?", $requested);
+        $request = $t[0];
+
+        for ($i = 0; $i < count($this->tree); $i++) {
+            $path = $this->tree[$i][0];
+
+
+            if ($request == $path) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function execute($requested)
     {
         $this->PrepareArgs();
         $request = $requested;
+        
 
-        if (stripos($requested, "?")!==false) {
+        if (stripos($requested, "?") !== false) {
             $t = explode("?", $requested);
-            $query = $t[1];
+            $query = $t[1];// no hace falta tener la query porque se carga en args
             $request = $t[0];
         }
 

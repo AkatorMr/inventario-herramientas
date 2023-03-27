@@ -1,5 +1,8 @@
 <?php
 include "conexion.php";
+include_once("Router.php");
+include_once("app.php");
+
 function MPLog($data)
 {
     $fp = fopen("log.txt", "a+");
@@ -7,16 +10,16 @@ function MPLog($data)
     fwrite($fp, $data . "\n");
     fclose($fp);
 }
-$comando = (array_keys($_GET));
 
-if (count($comando) == 0) {
-    include_once("Router.php");
-    include_once("app.php");
+$router = Router::getInstance();
 
-    $router = Router::getInstance();
+if ($router->contains($_SERVER["REQUEST_URI"])) {
+
     echo $router->execute($_SERVER["REQUEST_URI"]);
     exit();
 }
+
+$comando = (array_keys($_GET));
 
 $sub_comando = "";
 if (isset($_GET['nivel']))
@@ -26,7 +29,23 @@ $comando = $comando[0];
 
 
 //Deprecated use new api form
-if (strpos($comando, "ListarOperarios") !== FALSE) {
+
+if (strpos($comando, "InsertarOperario") !== FALSE) {
+
+
+    $legajo = $_POST["legajo"];
+    $apellido = $_POST["apellido"];
+    $nombre = $_POST["nombre"];
+    $sector = $_POST["sector"];
+
+    if (IN("INSERT INTO operarios (legajo,Nombre,Apellido,Sector)VALUES('$legajo','$nombre','$apellido','$sector')")) {
+        echo json_encode("ok");
+        exit();
+    }
+
+    echo json_encode("error");
+    die();
+} else if (strpos($comando, "ListarOperarios") !== FALSE) {
     //Deprecated use new api form
     SF("SELECT * FROM operarios");
     exit();
@@ -50,24 +69,9 @@ if (strpos($comando, "ListarOperarios") !== FALSE) {
 
     exit();
 }
-//Deprecated
+//End Deprecated
 
-if (strpos($comando, "InsertarOperario") !== FALSE) {
-
-
-    $legajo = $_POST["legajo"];
-    $apellido = $_POST["apellido"];
-    $nombre = $_POST["nombre"];
-    $sector = $_POST["sector"];
-
-    if (IN("INSERT INTO operarios (legajo,Nombre,Apellido,Sector)VALUES('$legajo','$nombre','$apellido','$sector')")) {
-        echo json_encode("ok");
-        exit();
-    }
-
-    echo json_encode("error");
-    die();
-} else if (strpos($comando, "ListarSectores") !== FALSE) {
+ if (strpos($comando, "ListarSectores") !== FALSE) {
 
     SF("SELECT DISTINCT `Sector` FROM `operarios`");
     exit();

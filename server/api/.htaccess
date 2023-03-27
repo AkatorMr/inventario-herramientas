@@ -1,0 +1,14 @@
+#rewriteengine on
+#RedirectMatch /*.* /api/index.php
+#rewritecond %{request_filename} !-f
+#rewriterule ^(.+)$ /api/index.php?i=$1.jpg [L]
+#ErrorDocument 404 index.php
+#FallbackResource index.php
+
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ErrorDocument 404 /api/index.php
+FallbackResource /api/index.php
