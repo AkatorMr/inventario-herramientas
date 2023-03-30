@@ -143,6 +143,7 @@ if (strpos($comando, "ListarSolicitudes") !== FALSE) {
     $sql .= " INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
     $sql .= " WHERE herramientas.Codigo LIKE '%$codigo%'";
     $sql .= " AND herramientas.Descripcion LIKE '%$descripcion%'";
+    $sql .= " AND MONTH(con.fecha_consumido) = MONTH(CURRENT_TIMESTAMP) AND YEAR(con.fecha_consumido) = YEAR(CURRENT_TIMESTAMP)";
     $sql .= " GROUP BY herramientas.Codigo";
     $sql .= " ORDER BY Cantidad DESC LIMIT $inicio,15;";
 
