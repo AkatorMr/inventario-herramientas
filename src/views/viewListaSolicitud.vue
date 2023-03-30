@@ -326,7 +326,7 @@ export default {
 
       var formData = new FormData();
       formData.append("id_sol", that.id_solicitud);
-
+      formData.append("fecha", that.nueva_fecha);
       // request options
       const options = {
         method: "POST",
