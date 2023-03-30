@@ -23,7 +23,7 @@ export default {
   methods: {
     ListarSectores: function(){
       let that = this;
-      fetch('/api/index.php?ListarSectores').then(response => response.json()).then(resp=>that.lista_sectores=resp);
+      fetch('/api/ListarSectores').then(response => response.json()).then(resp=>that.lista_sectores=resp);
   
     },
     

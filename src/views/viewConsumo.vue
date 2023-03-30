@@ -181,7 +181,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?AgregarCodigo", options)
+      fetch("/api/AgregarCodigo", options)
         .then((res) => res.json())
         .then((res) => that.HandlerHerramientaFaltante(res,a));
 
@@ -229,7 +229,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?GenerarConsumo", options)
+      fetch("/api/GenerarConsumo", options)
         .then((res) => res.json())
         .then((res) => that.DatosRecibidos(res));
     },

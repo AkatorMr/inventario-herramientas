@@ -137,7 +137,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?MostrarDetalles", options)
+      fetch("/api/MostrarDetalles", options)
         .then((res) => res.json())
         .then((res) => this.ObtenerDetalle(res));
     },
@@ -217,7 +217,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?ActualizarSolicitud", options)
+      fetch("/api/ActualizarSolicitud", options)
         .then((res) => res.text())
         .then((res) => that.DatosSolicitudRecibidos(res));
     },
@@ -238,7 +238,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?ActualizarSolicitud", options)
+      fetch("/api/ActualizarSolicitud", options)
         .then((res) => res.text())
         .then((res) => that.DatosSolicitudRecibidos(res));
     },
@@ -303,7 +303,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?EliminarSolicitud", options)
+      fetch("/api/EliminarSolicitud", options)
         .then((res) => res.text())
         .then((res) => that.DatosSolicitudRecibidos(res));
     },
@@ -373,7 +373,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?InsertarOperario", options)
+      fetch("/api/InsertarOperario", options)
         .then((res) => res.text())
         .then((res) => that.DatosRecibidos(res));
     },

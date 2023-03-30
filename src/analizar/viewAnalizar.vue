@@ -138,7 +138,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?InsertarOperario", options)
+      fetch("/api/InsertarOperario", options)
         .then((res) => res.text())
         .then((res) => that.DatosRecibidos(res));
     },

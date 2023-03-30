@@ -182,7 +182,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?EditarOperarioOperario", options)
+      fetch("/api/EditarOperarioOperario", options)
         .then((res) => res.text())
         .then((res) => that.DatosRecibidos(res));
     },
@@ -201,7 +201,7 @@ export default {
     ListarSectores: function () {
       //console.log("Text");
       let that = this;
-      fetch("/api/index.php?ListarSectores")
+      fetch("/api/ListarSectores")
         .then((response) => response.json())
         .then((resp) => (that.lista_sectores = resp));
     },
@@ -241,7 +241,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?InsertarOperario", options)
+      fetch("/api/InsertarOperario", options)
         .then((res) => res.text())
         .then((res) => that.DatosRecibidos(res));
     },

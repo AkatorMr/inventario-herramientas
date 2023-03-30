@@ -139,7 +139,7 @@ export default {
         body: formData,
       };
       let that = this;
-      fetch("/api/index.php?TransferirHerramienta", options)
+      fetch("/api/TransferirHerramienta", options)
         .then((response) => response.json())
         .then((resp) => {
           //that.lista_operarios = resp
@@ -199,7 +199,7 @@ export default {
     },
     ListarConsumos: function () {
       let that = this;
-      //console.log("/api/index.php?ListarConsumos&nivel=" + (this.nivel - 1));
+      //console.log("/api/ListarConsumos?nivel=" + (this.nivel - 1));
 
       var formData = new FormData();
 
@@ -214,7 +214,7 @@ export default {
         body: formData,
       };
 
-      fetch("/api/index.php?ListarConsumosEstadistica&nivel=" + (this.nivel - 1), options)
+      fetch("/api/ListarConsumosEstadistica?nivel=" + (this.nivel - 1), options)
         .then((response) => response.json())
         .then((resp) => {
           //that.lista_operarios = resp

@@ -132,7 +132,7 @@ export default {
   methods: {
     ListarSectores: function(){
       let that = this;
-      fetch('/api/index.php?ListarSectores').then(response => response.json()).then(resp=>that.lista_sectores=resp);
+      fetch('/api/ListarSectores').then(response => response.json()).then(resp=>that.lista_sectores=resp);
   
     },
     CargarSolicitud: function () {
@@ -160,7 +160,7 @@ export default {
       };
 
       // send POST request
-      fetch("/api/index.php?NuevaSolicitud", options)
+      fetch("/api/NuevaSolicitud", options)
         .then((res) => res.json())
         .then((res) => that.DatosRecibidos(res));
     },
