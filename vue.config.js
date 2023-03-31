@@ -8,5 +8,5 @@ module.exports = {
               }
         }
     },
-    outputDir: "build/"
+    outputDir: "dist/"
   }
