@@ -5,6 +5,7 @@ class Router
 
     private static $instance = null;
     private $tree = array();
+    private $tree_ref = array();
     private $args = array();
     private function __construct()
     {
@@ -21,10 +22,16 @@ class Router
         return self::$instance;
     }
 
+    /**
+     * @param mixed $func Función a ejecutar cuando se encuentre el path, nombre de la función o función anónima
+     */
     public function addApiEntry($path, $func)
     {
 
-        array_push($this->tree, array("/api/" . $path, $func));
+        if(is_string($func))
+            array_push($this->tree, array("/api/" . $path, $func));
+        else
+            array_push($this->tree_ref, array("/api/" . $path, $func));
 
     }
 
@@ -55,6 +62,16 @@ class Router
                 return true;
             }
         }
+
+        for ($i = 0; $i < count($this->tree_ref); $i++) {
+            $path = $this->tree_ref[$i][0];
+
+
+            if ($request == $path) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -80,6 +97,15 @@ class Router
                 }
 
                 return json_encode("Error: Función no encontrada");
+            }
+        }
+
+        for ($i = 0; $i < count($this->tree_ref); $i++) {
+            $path = $this->tree_ref[$i][0];
+            $func = $this->tree_ref[$i][1];
+
+            if ($request == $path) {
+                return $func($this->args);
             }
         }
     }

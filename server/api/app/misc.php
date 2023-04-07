@@ -5,10 +5,10 @@ include_once("Router.php");
 $router = Router::getInstance();
 
 
-function ListarCodigos()
+$ListarCodigos = function()
 {
     return SFr("SELECT `Codigo`,`Descripcion` FROM `herramientas`");
-}
+};
 
 
 
@@ -69,7 +69,7 @@ function AgregarCodigo($_ARGS)
 
 
 $router->addApiEntry("AgregarCodigo", "AgregarCodigo");
-$router->addApiEntry("ListarCodigos", "ListarCodigos");
+$router->addApiEntry("ListarCodigos", $ListarCodigos);
 $router->addApiEntry("MostrarDetalles", "MostrarDetalles");
 
 ?>

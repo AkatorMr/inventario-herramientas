@@ -11,13 +11,12 @@ include("app/misc.php");
 
 
 
-
-function Prueba($args)
+$Prueba = function($args)
 {
     print_r($args);
-}
+};
 
-$router->addApiEntry("Prueba", "Prueba");
+$router->addApiEntry("Prueba", $Prueba);
 
 
 
