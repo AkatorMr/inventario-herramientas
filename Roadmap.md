@@ -20,3 +20,4 @@
 - [ ] Revisar el "Marcar como disponible" de las solicitudes, parece que no anda.
 - [ ] Agregar botón "Ordenar Por" en las tablas.
 - [ ] Agregar cierre de caja, por semana, mes y año
+- [x] En la vista de las solicitudes, separar el "ESTADO" en pestañas.

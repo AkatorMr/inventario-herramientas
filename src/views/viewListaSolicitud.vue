@@ -2,6 +2,7 @@
   <div class="container">
     <MuroDeCarga :bMostrar="bIngresoDatos" @dismis="bIngresoDatos = false">
       <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
+
       <div class="Recuadro" v-if="nuevo_estado != 'DISPONIBLE'">
         <div class="text-center">
           <span>Cambiar Estado</span>
@@ -54,7 +55,26 @@
 
     <InputBox v-if="bShowInputBox" :Titulo="sColumna" :Default="valoramostrar" @Listo="Resultado"></InputBox>
 
-    <table class="table">
+
+    <nav>
+      <div class="nav nav-tabs">
+
+        <a :class="'nav-item nav-link' + ((filtroEstado == item) ? ' active' : '')" v-for="(item, index) in [
+          'AGREGAR',
+          'LISTA',
+          'CARGADO',
+          'DISPONIBLE',
+          'ELIMINADA'
+        ]" :key="index" @click="filtroEstado = item;ListarSolicitudes();"> {{ item }} </a>
+
+      </div>
+    </nav>
+
+    <div class="tab-content" >
+      
+    
+
+    <table class="table tab-pane fade show active">
       <thead>
         <tr class="ajustar-ancho">
           <th scope="col">
@@ -81,15 +101,6 @@
               {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
             </div>
           </th>
-          <th scope="col">
-
-            <div>Mostrar Eliminados: <input type="checkbox" v-model="bMostrarEliminados"
-                @change="ListarSolicitudes()" /></div>
-            <div>Estado</div>
-            <div @click="Filtro('Estado')">
-              {{ filtroEstado == "" ? "#######" : filtroEstado }}
-            </div>
-          </th>
           <th scope="col">Fecha</th>
           <th scope="col">Comandos</th>
         </tr>
@@ -101,24 +112,16 @@
           <td>{{ a.full_name }}</td>
           <td>{{ a.cod_herramienta }}</td>
           <td>{{ a.Descripcion }}</td>
+          
           <td>
-
-            <!-- i v-if="a.estado=='DISPONIBLE'" class="fa-solid fa-check-double"></i>
-            <i v-if="a.estado=='LISTA'" class="fa-solid fa-barcode-read"></i>
-            <i v-if="a.estado=='AGREGAR'" class="fa-solid fa-plus"></i>
-            <i v-if="a.estado=='CARGADO'" class="fa-solid fa-books-medical"></i> -->
-            {{ a.estado }}
-
-          </td>
-          <td>
-            {{ a.fecha_solicitud}}
+            {{ a.fecha_solicitud }}
           </td>
           <td>
             <div class="a-icon-group">
               <div class="a-icon flecha" @click="ActualizarSolicitud(a.id, 'PEDIDO')" title="Cargar en pedido">&#9654;
               </div>
-              <div class="a-icon aplicar" title="Marcar como disponible"
-                @click="ActualizarSolicitud(a.id, 'DISPONIBLE')"></div>
+              <div class="a-icon aplicar" title="Marcar como disponible" @click="ActualizarSolicitud(a.id, 'DISPONIBLE')">
+              </div>
               <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
               <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
             </div>
@@ -126,6 +129,8 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
     <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="nivel < 2">
       Anterior
     </button>
@@ -138,10 +143,11 @@
 <script>
 import InputBox from "../components/InputBox.vue";
 import MuroDeCarga from "../components/MuroDeCarga.vue";
+import SolicitudTab from "../components/SolicitudTab.vue";
 
 export default {
   name: "CargarOperarios",
-  components: { InputBox, MuroDeCarga },
+  components: { InputBox, MuroDeCarga, SolicitudTab },
   data() {
     return {
       op_legajo: "",
@@ -167,8 +173,9 @@ export default {
       nueva_fecha: "",
       esta: null,
       oItemSeleccionado: null,
-      bMostrarEliminados: false,
+      bMostrarEliminados: true,
       filtroEstado: "",
+      TabSelect:"",
       sPedido: { id_sol: 0, bMostrar: false, nro_pedido: 0, nueva_fecha: "" }
     };
   },
@@ -410,6 +417,7 @@ export default {
     },
   },
   mounted() {
+    this.filtroEstado = 'AGREGAR';
     this.ListarSolicitudes();
   },
 };
