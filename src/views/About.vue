@@ -1,8 +1,8 @@
 <template>
   
-    <div class="container">
+    <div class="d-flex">
 <!--Menu-->
-<!-- <div class="nav-side-menu">
+<div class="nav-side-menu">
     <div class="brand">Press Curing Control</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 
@@ -60,10 +60,14 @@
         </ul>
 
       </ul>
+      
     </div>
-  </div> -->
+    
+  </div>
 <!--Menu-->
+<div class="nav-side-menue-wrapper container">
     <IoTItem></IoTItem>
+  </div>
 
   </div>
   
@@ -96,6 +100,11 @@ export default {
   width: 300px;
   height: 100%;
   color: #e1ffff;
+}
+
+.nav-side-menue-wrapper{
+  /* position: relative; */
+  margin-left: 300px;
 }
 
 .nav-side-menu .brand {
