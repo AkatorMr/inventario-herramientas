@@ -115,20 +115,7 @@
         v-model="tVale.Oracle"
         type="number"
       />
-      <span class="input-group-text col-md-1">Vale MP:</span>
 
-      <input
-        class="form-control col-md"
-        placeholder="OT"
-        v-model="tVale.MPot"
-        type="number"
-      />
-      <input
-        class="form-control col-md"
-        placeholder="Vale"
-        v-model="tVale.MPvale"
-        type="number"
-      />
     </div>
     <button class="btn btn-outline-primary" @click="GenerarConsumo()">
       Generar Consumo
@@ -154,7 +141,7 @@ export default {
       bFocusCodigoODescripcion: true,
       tNombre: "",
       bMuroDeCarga: false,
-      tVale: { Oracle: null, MPot: null, MPvale: null, Fecha:null },
+      tVale: { Oracle: null, Fecha:null },
       AgregarDo: "Agregar",
       lista_a_consumir:[],
     };
@@ -216,8 +203,8 @@ export default {
         formData.append("cantidad["+index+"]", that.lista_a_consumir[index].tCantidad);
       }
       formData.append("valeoracle", that.tVale.Oracle);
-      formData.append("mpot", that.tVale.MPot);
-      formData.append("mpvale", that.tVale.MPvale);
+      //formData.append("mpot", that.tVale.MPot);
+      //formData.append("mpvale", that.tVale.MPvale);
       formData.append("valefecha", that.tVale.Fecha);
       console.log(formData);
       //formData.append("nombre", that.op_nombre);
@@ -254,8 +241,8 @@ export default {
       this.tNombre = "";
       this.tCantidad = 0;
       this.tVale.Oracle = null;
-      this.tVale.MPvale = null;
-      this.tVale.MPot = null;
+      //this.tVale.MPvale = null;
+      //this.tVale.MPot = null;
       this.tVale.Fecha = null;
       this.lista_a_consumir = [];
       this.AgregarLineaConsumo();

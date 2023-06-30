@@ -85,8 +85,6 @@ function GenerarConsumo($_ARGS)
     $a_codigo = $_ARGS["codigo"]; //Es un array
     $a_cantidad = $_ARGS["cantidad"]; // Es un array
     $vale_oracle = $_ARGS["valeoracle"];
-    $vale_mp = $_ARGS["mpvale"];
-    $ot_mp = $_ARGS["mpot"];
 
     $vale_fecha = $_ARGS["valefecha"];
 
@@ -143,7 +141,7 @@ function GenerarConsumo($_ARGS)
 
         }
         if (IN($sql)) {
-            $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle,vale_mp,ot_mp)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle','$vale_mp','$ot_mp')";
+            $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle')";
             //MPLog($sql_2);
             if (IN($sql_2)) {
                 $c = true;
@@ -166,4 +164,5 @@ $router->addApiEntry("ListarPedidos", "ListarPedidos");
 $router->addApiEntry("GenerarConsumo", "GenerarConsumo");
 $router->addApiEntry("ListarConsumos", "ListarConsumos");
 $router->addApiEntry("ListarConsumosEstadistica", "ListarConsumosEstadistica");
+
 ?>

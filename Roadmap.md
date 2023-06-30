@@ -21,3 +21,4 @@
 - [ ] Agregar botón "Ordenar Por" en las tablas.
 - [ ] Agregar cierre de caja, por semana, mes y año
 - [x] En la vista de las solicitudes, separar el "ESTADO" en pestañas.
+- [x] Quitar referencias de OT y Nro de vale de la página generar consumo
