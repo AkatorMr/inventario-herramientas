@@ -84,6 +84,14 @@ function GenerarConsumo($_ARGS)
     $legajo = $_ARGS["legajo"];
     $a_codigo = $_ARGS["codigo"]; //Es un array
     $a_cantidad = $_ARGS["cantidad"]; // Es un array
+    if(!isset($_ARGS["estado"]) && !empty($_ARGS["estado"]))
+        $a_estado = $_ARGS["estado"]; //Es un array
+
+    $nota = "";
+    
+    if(isset($_ARGS["nota"]) && !empty($_ARGS["nota"]))
+        $nota = $_ARGS["nota"]; //La nota debe ser por cada consumo
+    
     $vale_oracle = $_ARGS["valeoracle"];
 
     $vale_fecha = $_ARGS["valefecha"];
@@ -105,12 +113,18 @@ function GenerarConsumo($_ARGS)
     //echo json_encode($fecha_consumo);
     //exit();
 
+    
+
     $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES (\'502514\', \'CINTA_11_0011\', \'2021-11-25\', \'CONSUMIDA\', \'0000-00-00\', \'0\', \'0000-00-00\');";
     $s = "";
     $c = true;
     for ($i = 0; $i < count($a_codigo); $i++) {
         $codigo = $a_codigo[$i];
         $cantidad = $a_cantidad[$i];
+
+        $estado = "CONSUMIDA";
+        if(isset($a_estado))
+            $estado = $a_estado[$i];
 
         //Esto vale oro
         $sql = "SELECT `solicitudes`.`id` AS ide , `solicitudes`.`cod_herramienta` , `operarios`.`Nombre` AS `nombre` FROM `solicitudes`
@@ -141,7 +155,7 @@ function GenerarConsumo($_ARGS)
 
         }
         if (IN($sql)) {
-            $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,estado,vale_oracle)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','CONSUMIDA','$vale_oracle')";
+            $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,nota,estado,vale_oracle)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','$nota','$estado','$vale_oracle')";
             //MPLog($sql_2);
             if (IN($sql_2)) {
                 $c = true;
