@@ -63,7 +63,7 @@ function ActualizarSolicitud($_ARGS)
         $sql = "UPDATE `solicitudes` SET " . $editar . "`estado` = '$estado' WHERE `id`='$id_sol';";
         //echo $sql;
         if (IN($sql)) {
-            return json_encode("ac");
+            return json_encode("ac".$estado);
 
         }
         return json_encode("error");
@@ -98,7 +98,7 @@ function ActualizarSolicitud($_ARGS)
     $sql = "UPDATE `solicitudes` SET " . $editar . "`estado` = '$estado' WHERE `id`='$id_sol';";
     //echo $sql;
     if (IN($sql)) {
-        return json_encode("ac");
+        return json_encode("ac".$estado);
     }
 
 

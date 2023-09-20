@@ -352,7 +352,7 @@ if (strpos($comando, "ListarSolicitudes") !== FALSE) {
         $sql = "UPDATE `solicitudes` SET " . $editar . "`estado` = '$estado' WHERE `id`='$id_sol';";
         //echo $sql;
         if (IN($sql)) {
-            echo json_encode("ac");
+            echo json_encode("ac".$estado);
             exit();
         }
         echo json_encode("error");
