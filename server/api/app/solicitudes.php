@@ -55,15 +55,17 @@ function ActualizarSolicitud($_ARGS)
     $fecha = $_ARGS["fecha"];
 
     if ($estado == "CARGADO") {
-        $sc = $_ARGS["nro_sc"];
+        $sc = $_ARGS["nro_solicitud"];
         $editar = "";
         if (!empty($sc))
             $editar .= "`id_solicitud_compra` = '$sc', ";
+        
+        $editar.="`fecha_sc` = '$fecha',";
 
         $sql = "UPDATE `solicitudes` SET " . $editar . "`estado` = '$estado' WHERE `id`='$id_sol';";
         //echo $sql;
         if (IN($sql)) {
-            return json_encode("ac".$estado);
+            return json_encode("ac".$estado."asd");
 
         }
         return json_encode("error");

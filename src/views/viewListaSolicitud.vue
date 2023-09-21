@@ -3,15 +3,14 @@
     <MuroDeCarga :bMostrar="bIngresoDatos" @dismis="bIngresoDatos = false">
       <!-- <div class="MuroDeCarga" v-if="bIngresoDatos"> -->
 
-      <div class="Recuadro" v-if="nuevo_estado != 'DISPONIBLE'">
+      <div class="Recuadro" v-if="editar_solicitud.nuevo_estado != 'DISPONIBLE'">
         <div class="text-center">
           <span>Cambiar Estado</span>
-          <select class="form-control form-select" aria-label="">
+          <select class="form-control form-select" aria-label="" v-model="editar_solicitud.nuevo_estado">
             <option v-for="(item, index) in [
               'LISTA',
               'PERDIDA',
               'CARGADO',
-              'DISPONIBLE',
               'LLEGO',
               'GENERAR',
               'AGREGAR',
@@ -23,11 +22,11 @@
         </div>
         <div class="text-center">
           <span>Nro Solicitud</span>
-          <input class="form-control" v-model="nro_solicitud" />
+          <input class="form-control" v-model="editar_solicitud.nro_solicitud" />
         </div>
         <div class="text-center">
           <span>Fecha</span>
-          <input class="form-control" type="date" v-model="nueva_fecha" />
+          <input class="form-control" type="date" v-model="editar_solicitud.nueva_fecha" />
         </div>
         <div class="text-center">
           <button class="btn btn-primary" @click="enviarClick">Aceptar</button>
@@ -167,10 +166,7 @@ export default {
       filtro_codigo: "",
       filtro_descripcion: "",
       valoramostrar: "",
-      id_solicitud: 0,
-      nuevo_estado: "AGREGAR",
-      nro_solicitud: "",
-      nueva_fecha: "",
+      editar_solicitud:{id_solicitud:0, nuevo_estado:"AGREGAR",nro_solicitud:"", nueva_fecha:""},
       esta: null,
       oItemSeleccionado: null,
       bMostrarEliminados: true,
@@ -262,12 +258,14 @@ export default {
 
     enviarClick: function () {
       let that = this;
+      
+      console.log(that.editar_solicitud.nuevo_estado);
 
       var formData = new FormData();
-      formData.append("id_sol", that.id_solicitud);
-      formData.append("estado", that.nuevo_estado);
-      formData.append("nro_solicitud", that.nro_solicitud);
-      formData.append("fecha", that.nueva_fecha);
+      formData.append("id_sol", that.editar_solicitud.id_solicitud);
+      formData.append("estado", that.editar_solicitud.nuevo_estado);
+      formData.append("nro_solicitud", that.editar_solicitud.nro_solicitud);
+      formData.append("fecha", that.editar_solicitud.nueva_fecha);
 
       // request options
       const options = {
@@ -284,8 +282,9 @@ export default {
     DatosSolicitudRecibidos: function (datos) {
       this.bIngresoDatos = false;
       this.sPedido.bMostrar = false;
-      this.nuevo_estado = "";
-      this.id_solicitud = -1;
+      this.editar_solicitud.nuevo_estado = "";
+      this.editar_solicitud.id_solicitud = -1;
+      this.editar_solicitud.nro_solicitud = "";
       console.log(datos);
       this.ListarSolicitudes();
     },
@@ -299,21 +298,23 @@ export default {
         return;
       }
 
-      this.id_solicitud = id_sol;
+      this.editar_solicitud.id_solicitud = id_sol;
       this.bIngresoDatos = true;
 
       if (estado == "DISPONIBLE") {
         this.bIngresoDatos = false;
-        this.nuevo_estado = "DISPONIBLE";
-        this.nro_solicitud = id_sol;
+        this.editar_solicitud.nuevo_estado = "DISPONIBLE";
+        this.editar_solicitud.nro_solicitud = id_sol;
         let v = new Date();
         let sFecha = v.getFullYear() + "-";
         sFecha += (v.getMonth() + 1 < 10 ? "0" : "") + (v.getMonth() + 1) + "-";
         sFecha += (v.getDate() < 10 ? "0" : "") + v.getDate();
-        this.nueva_fecha = sFecha;
+        this.editar_solicitud.nueva_fecha = sFecha;
         this.enviarClick();
       } else {
-        //La solicitud es para editar
+        //La solicitud es para editar mediante GUI
+        this.editar_solicitud.id_solicitud = id_sol;
+        //this.enviarClick();
       }
     },
 

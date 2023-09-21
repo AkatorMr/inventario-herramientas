@@ -22,4 +22,4 @@
 - [ ] Agregar cierre de caja, por semana, mes y año
 - [x] En la vista de las solicitudes, separar el "ESTADO" en pestañas.
 - [x] Quitar referencias de OT y Nro de vale de la página generar consumo.
-- [ ] Revisar el cambio de estado de la solicitud a Lista y Cargado porque no actualiza esos valores.
+- [x] Revisar el cambio de estado de la solicitud a Lista y Cargado porque no actualiza esos valores.
