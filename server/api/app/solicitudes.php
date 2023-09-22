@@ -143,8 +143,10 @@ function ListarSolicitudes($_ARGS)
     $sql .= " AND h.Descripcion LIKE '%$descripcion%'";
     $sql .= " AND o.Legajo LIKE '%$legajo%'";
     $sql .= " AND s.estado LIKE '%$filtroEstado%'";
-    $sql .= " AND (o.Nombre LIKE '%$nombre%'";
-    $sql .= " OR o.Apellido LIKE '%$nombre%')";
+    $sql .= " AND (LOWER(o.Nombre) LIKE LOWER('%$nombre%')";
+    $sql .= " OR upper(o.Nombre) LIKE upper('%$nombre%')";
+    $sql .= " OR upper(o.Apellido) LIKE upper('%$nombre%')";
+    $sql .= " OR LOWER(o.Apellido) LIKE LOWER('%$nombre%'))";
     $sql .= " GROUP BY h.Codigo, o.Legajo, s.estado";
     $sql .= " ORDER BY o.Legajo LIMIT $inicio,6;";
     //MPLog("Dentro de api");

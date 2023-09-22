@@ -23,3 +23,5 @@
 - [x] En la vista de las solicitudes, separar el "ESTADO" en pestañas.
 - [x] Quitar referencias de OT y Nro de vale de la página generar consumo.
 - [x] Revisar el cambio de estado de la solicitud a Lista y Cargado porque no actualiza esos valores.
+- [ ] Al apretar Enter en los filtros que se active el botón para no usar el Mouse 
+- [ ] La búsqueda de los filtros debe ser caseinsensitive
