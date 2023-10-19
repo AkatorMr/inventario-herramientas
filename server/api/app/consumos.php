@@ -113,11 +113,10 @@ function GenerarConsumo($_ARGS)
     //echo json_encode($fecha_consumo);
     //exit();
 
-    
-
     $sql = "INSERT INTO solicitudes (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES (\'502514\', \'CINTA_11_0011\', \'2021-11-25\', \'CONSUMIDA\', \'0000-00-00\', \'0\', \'0000-00-00\');";
     $s = "";
     $c = true;
+    $msg = "";
     for ($i = 0; $i < count($a_codigo); $i++) {
         $codigo = $a_codigo[$i];
         $cantidad = $a_cantidad[$i];
@@ -133,7 +132,7 @@ function GenerarConsumo($_ARGS)
             AND `solicitudes`.`estado` = 'DISPONIBLE' 
             AND `solicitudes`.`cod_herramienta`='$codigo' 
             LIMIT 1;";
-        error_log($sql);
+        //error_log($sql);
 
         //Ahora hay un bug con la cantidad de elementos que por ahora no detecta y no tengo manera sencilla de solucionarlo,
         // deberia cambiar la tabla y poner que sea con cantidad y no por unidad
@@ -145,13 +144,13 @@ function GenerarConsumo($_ARGS)
             //echo "Realiza un update";
             $row = $res->fetch_assoc();
             $ide = $row['ide'];
-
+            $msg = "Solicitud actualizada";
             $sql = "UPDATE `solicitudes` SET `legajo_operario` = '$legajo',`estado`='CONSUMIDA' WHERE `id`='$ide';";
 
         } else {
             //Hacer un insert de la solicitud
             $sql = "INSERT INTO `solicitudes` (`legajo_operario`, `cod_herramienta`, `fecha_solicitud`, `estado`, `fecha_sc`, `id_solicitud_compra`, `fecha_llegada`) VALUES ('$legajo', '$codigo', '$fecha_consumo', 'CONSUMIDA', '$fecha_consumo', '0', '$fecha_consumo');";
-
+            $msg = "Solicitud Creada";
 
         }
         if (IN($sql)) {
@@ -160,6 +159,7 @@ function GenerarConsumo($_ARGS)
             if (IN($sql_2)) {
                 $c = true;
                 $s .= "1";
+                $msg .= "\nConsumo generado";
                 continue;
             }
         }
@@ -167,9 +167,9 @@ function GenerarConsumo($_ARGS)
         $s = $sql;
     }
     if ($c) {
-        return json_encode("ok");
+        return json_encode(array($msg,"ok"));
     }
-    return json_encode("error");
+    return json_encode(array("error","error"));
 
 }
 

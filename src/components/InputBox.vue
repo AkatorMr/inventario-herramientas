@@ -3,7 +3,7 @@
     <div class="Recuadro">
       <div class="text-center">{{ Titulo }}</div>
       <div class="text-center">
-        <input class="form-control" v-model="valorentrada" />
+        <input class="form-control" v-model="valorentrada" @keyup.enter="sendClick" />
       </div>
       <div class="text-center">
         <button class="btn btn-primary" @click="sendClick">Aceptar</button>

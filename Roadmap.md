@@ -23,5 +23,16 @@
 - [x] En la vista de las solicitudes, separar el "ESTADO" en pestañas.
 - [x] Quitar referencias de OT y Nro de vale de la página generar consumo.
 - [x] Revisar el cambio de estado de la solicitud a Lista y Cargado porque no actualiza esos valores.
-- [ ] Al apretar Enter en los filtros que se active el botón para no usar el Mouse 
-- [ ] La búsqueda de los filtros debe ser caseinsensitive
+- [x] Al apretar Enter en los filtros que se active el botón para no usar el Mouse 
+- [x] La búsqueda de los filtros debe ser caseinsensitive
+- [x] Agregar a los filtros un comodin % para filtrar
+
+## Cambio de perspectiva
+
+Para generar una herramienta de gestión de herramientas que sea útil, necesitas modificar el funcionamiento para que no solo te permita registrar sino que tambíen te permita organizarte de una forma práctica.
+
+Una posible idea es que el retiro de una herramienta solo se permita cuando tenga un pedido y que cada pedido se origine desde una solicitud.
+
+Por lo que el flujo de información será:
+
+Solicitud ---> Pedido ---> Entrega

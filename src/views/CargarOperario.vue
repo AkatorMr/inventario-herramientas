@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <button @click="callTitle('Hola','ok');">asd</button>
+    
     <div class="muro" v-if="bMuro"></div>
     <!-- <MuroDeCarga :bMostrar="MostrarVentana" @click="MostrarVentana=false;" >
       <div class="container" style="position: relative; top: 35%" @click.stop  >
@@ -131,6 +133,7 @@
 import ListaOperarios from "../components/ListaOperarios.vue";
 import InputDropDown from "../components/InputDropDown.vue";
 import MuroDeCarga from "../components/MuroDeCarga.vue";
+import PopUpMsg from "../components/PopUpMsg.vue";
 
 export default {
   name: "CargarOperarios",
@@ -138,7 +141,8 @@ export default {
     ListaOperarios,
     InputDropDown,
     MuroDeCarga,
-  },
+    PopUpMsg
+},
   data() {
     return {
       op_legajo: "",
@@ -249,6 +253,7 @@ export default {
   mounted() {
     this.ListarSectores();
     this.FiltrarSector();
+    
   },
 };
 </script>

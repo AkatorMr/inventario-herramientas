@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <PopUpMsg ref="msgbox"></PopUpMsg>
     <div class="MuroDeCarga" v-if="bMuroDeCarga"></div>
     <div>
       <div v-for="(a, key) of lista_a_consumir" :key="key" class="input-group mb-3">
@@ -94,9 +95,10 @@
 
 <script>
 import InputDropDown from "../components/InputDropDown.vue";
+import PopUpMsg from "../components/PopUpMsg.vue";
 export default {
   name: "Consumos",
-  components: { InputDropDown },
+  components: { InputDropDown,PopUpMsg },
   data() {
     return {
       lista_codigos: [],
@@ -116,6 +118,9 @@ export default {
   },
 
   methods: {
+    MessageBox(msg,estado){
+      this.$refs.msgbox.Mostrar(msg,estado);
+    },
     AgregarHerramientaFaltante: function (a) {
       //this.AgregarDo = "Agregado";
       console.log(a);
@@ -147,10 +152,15 @@ export default {
     },
     HandlerHerramientaFaltante: function (da, a) {
       this.bMuroDeCarga = false;
+      let msg = "";
       if (da == "ok") {
-        this.LanzarNotificacion("El elemento " + a.tCodigo + " se a agregado!");
+        msg = "El elemento " + a.tCodigo + " se a agregado!";
+        this.LanzarNotificacion(msg);
+        this.MessageBox(msg,"ok");
       } else if (da == "ac") {
-        this.LanzarNotificacion("El elemento " + a.tCodigo + " se a actualizado!");
+        msg = "El elemento " + a.tCodigo + " se a actualizado!";
+        this.LanzarNotificacion(msg);
+        this.MessageBox(msg,"fallo");
       }
 
     },
@@ -195,7 +205,8 @@ export default {
     DatosRecibidos: function (da) {
       this.bMuroDeCarga = false;
       console.log(da);
-      if (da == "ok") {
+      this.MessageBox(da[0],da[1]);
+      if (da[1] == "ok") {
         this.LimpiarDatos();
       }
     },
