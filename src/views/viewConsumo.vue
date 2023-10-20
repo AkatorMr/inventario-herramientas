@@ -35,7 +35,7 @@
           </li>
         </ul>
 
-        <span class="input-group-text col-md-1">Cantidad:</span>
+        <!-- <span class="input-group-text col-md-1">Cantidad:</span> -->
 
         <input class="form-control col-md" placeholder="Cantidad" aria-label="Cantidad" v-model="a.tCantidad"
           type="number" />
