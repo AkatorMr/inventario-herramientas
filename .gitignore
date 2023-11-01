@@ -27,3 +27,4 @@ server/js/*.js
 server/js/*.map
 server/css/*.css
 server/index.html
+server/new/*
