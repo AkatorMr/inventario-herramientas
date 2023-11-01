@@ -5,7 +5,7 @@
     <div class="container">
       <ul class="nav justify-content-center embellecedor">
         <li class="nav-item">
-          <a class="nav-link active" href="#">Dar de baja</a>
+          <a class="nav-link active" @click="DarDeBaja(null)">Dar de baja</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" @click="MostrarVentana = true">Transferir</a>
@@ -18,15 +18,40 @@
         </li>
       </ul>
     </div>
-    <InputBox
-      v-if="bShowInputBox"
-      :Titulo="sColumna"
-      :Default="valoramostrar"
-      @Listo="Resultado"
-    ></InputBox>
+    <InputBox v-if="bShowInputBox" :Titulo="sColumna" :Default="valoramostrar" @Listo="Resultado"></InputBox>
     <MuroDeCarga :bMostrar="MostrarVentana">
       <SelectOperarios @OnSelect="CambiarS"></SelectOperarios>
     </MuroDeCarga>
+
+    <MuroDeCarga :bMostrar="bVentanaDeNota">
+    <!-- <div class="input-group mb-2" style="margin-top: auto; margin-bottom: auto;">
+        <div class="input-group-prepend" style="height: 200px;">
+          <span class="input-group-text">Nota:</span>
+        </div>
+        <textarea class="form-control" v-model="notaDeBaja"></textarea>
+        <button class="btn btn-outline-primary" @click="DarDeBaja(this.notaDeBaja)">Dar de Baja</button>
+      </div> -->
+    <div class="modal" tabindex="-1"  style="display: block;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nota:</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> -->
+          </div>
+          <div class="modal-body">
+            <textarea class="form-control" v-model="notaDeBaja"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" @click="DarDeBaja('baja')">Dar de Baja</button>
+            <button type="button" class="btn btn-secondary" @click="bVentanaDeNota=false">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </MuroDeCarga>
+
     <table class="table">
       <thead>
         <tr>
@@ -63,17 +88,13 @@
           </th>
           <th scope="col">
             <span>Fecha</span>
-            
+
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(a, key) of lista_consumos"
-          :key="key"
-          :class="esta == key ? 'selected' : ''"
-          @click="pasar($event, key, a)"
-        >
+        <tr v-for="(a, key) of lista_consumos" :key="key" :class="esta == key ? 'selected' : ''"
+          @click="pasar($event, key, a)">
           <th>{{ key + (nivel - 1) * 15 + 1 }}</th>
           <td scope="row">{{ a.Legajo }}</td>
           <td>{{ a.Nombre + " " + a.Apellido }}</td>
@@ -84,11 +105,7 @@
         </tr>
       </tbody>
     </table>
-    <button
-      class="btn bt-outline-primary"
-      @click="AnteriorNivel"
-      :disabled="nivel < 2"
-    >
+    <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="nivel < 2">
       Anterior
     </button>
     <button class="btn bt-outline-primary" @click="SiguienteNivel">
@@ -130,9 +147,48 @@ export default {
       valoramostrar: "",
       oItemSeleccionado: Object,
       MostrarVentana: false,
+      bVentanaDeNota: false,
+      notaDeBaja: ""
     };
   },
   methods: {
+    DarDeBaja: function (mensaje) {
+
+      console.log(this.oItemSeleccionado);
+      if (this.oItemSeleccionado == null) return;
+      if (this.esta == -1) return;
+
+      console.log(mensaje);
+      if (mensaje == null) {
+        this.bVentanaDeNota = true;
+        return;
+      }
+
+
+      var formData = new FormData();
+
+      formData.append("legajo", this.oItemSeleccionado.Legajo);
+      formData.append("codigo", this.oItemSeleccionado.Codigo);
+      formData.append("nota", this.notaDeBaja);
+
+
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+      let that = this;
+      fetch("/api/DarDeBaja", options)
+        .then((response) => response.json())
+        .then((resp) => {
+          //that.lista_operarios = resp
+          that.oItemSeleccionado = null;
+          that.bVentanaDeNota = false;
+          console.log(resp);
+        });
+
+
+    },
+
     CambiarS(t, a, b) {
       console.log(t, a, b);
     },
@@ -233,9 +289,9 @@ export default {
       };
 
       fetch("/api/ListarConsumos?nivel=" + (this.nivel - 1), options)
-        .then((response) => 
+        .then((response) =>
           response.json()
-          
+
         )
         .then((resp) => {
           //that.lista_operarios = resp

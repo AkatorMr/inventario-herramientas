@@ -42,6 +42,23 @@ function ListarConsumosEstadistica($_ARGS)
 }
 
 
+function DarDeBaja($_ARGS){
+    $legajo = $_ARGS["legajo"];
+    $codigo = $_ARGS["codigo"];
+    $nota = $_ARGS["nota"];
+
+    $sql = "SELECT id FROM consumos WHERE `legajo_operario`='$legajo' AND `cod_herramienta` = '$codigo' AND `estado`='CONSUMIDA' LIMIT 1;";
+    $obj = json_decode(SFr($sql));
+    if(count($obj)>0){
+        $id = $obj[0]->id;
+        print_r($obj);
+        $sql2 = "UPDATE consumos SET `estado` = 'BAJA', `nota` = '$nota'  WHERE `id`='$id'";
+
+        return json_encode((IN($sql2)?"ok":"error"));
+    }
+    return json_encode("error");
+}
+
 
 function ListarConsumos($_ARGS)
 {
@@ -58,7 +75,7 @@ function ListarConsumos($_ARGS)
     $sql .= " FROM `consumos` con";
     $sql .= " INNER JOIN `herramientas` ON (con.cod_herramienta = herramientas.Codigo)";
     $sql .= " INNER JOIN `operarios` ON con.legajo_operario = operarios.legajo";
-    $sql .= " WHERE herramientas.Codigo LIKE '%$codigo%'";
+    $sql .= " WHERE con.estado='CONSUMIDA' AND herramientas.Codigo LIKE '%$codigo%'";
     $sql .= " AND herramientas.Descripcion LIKE '%$descripcion%'";
     $sql .= " AND operarios.Legajo LIKE '%$legajo%'";
     $sql .= " AND (operarios.Nombre LIKE '%$nombre%'";
@@ -178,5 +195,6 @@ $router->addApiEntry("ListarPedidos", "ListarPedidos");
 $router->addApiEntry("GenerarConsumo", "GenerarConsumo");
 $router->addApiEntry("ListarConsumos", "ListarConsumos");
 $router->addApiEntry("ListarConsumosEstadistica", "ListarConsumosEstadistica");
+$router->addApiEntry("DarDeBaja", "DarDeBaja");
 
 ?>
