@@ -39,7 +39,7 @@
               Decripci&oacute;n
             </th>
 
-            <th scope="col" style="width: 18%;">Comandos</th>
+            <th scope="col" style="width: 18%;">Cantidad</th>
           </tr>
         </thead>
         <tbody>
@@ -47,10 +47,8 @@
 
             <td scope="row">{{ a.codigo }}</td>
             <td>{{ a.descripcion }}</td>
+            <td>{{ a.cantidad }}</td>
 
-            <td>
-              <!-- <button class="btn btn-outline-info" @click="MostrarDetalle(a.pedido)">Detalle</button> -->
-            </td>
           </tr>
         </tbody>
       </table>

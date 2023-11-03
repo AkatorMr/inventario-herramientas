@@ -18,10 +18,10 @@ function MostrarDetalles($_ARGS)
 
     $nroPedido = $_ARGS["nroPedido"];
 
-    $sql = "SELECT sol.cod_herramienta AS codigo, her.Descripcion as descripcion ";
+    $sql = "SELECT sol.cod_herramienta AS codigo, her.Descripcion as descripcion, COUNT(sol.cod_herramienta) as cantidad ";
     $sql .= "FROM `solicitudes` sol ";
     $sql .= "INNER JOIN `herramientas` her ON (sol.cod_herramienta = her.Codigo) ";
-    $sql .= "WHERE `id_solicitud_compra`='$nroPedido' ";
+    $sql .= "WHERE `id_solicitud_compra`='$nroPedido' GROUP BY sol.cod_herramienta ORDER BY sol.cod_herramienta";
 
     //echo $sql;
     //echo $bME;

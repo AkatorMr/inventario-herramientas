@@ -26,6 +26,7 @@
 - [x] Al apretar Enter en los filtros que se active el botón para no usar el Mouse 
 - [x] La búsqueda de los filtros debe ser caseinsensitive
 - [x] Agregar a los filtros un comodin % para filtrar
+- [ ] En la lista de solicitudes al modificar el estado de una solicitud hacerlo con todos los items de la misma
 
 ## Cambio de perspectiva
 
