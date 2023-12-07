@@ -1,5 +1,7 @@
 # Roadmap
-## Cosas por hacer:
+
+## Cosas por hacer - Liste de features:
+
 - [x] Formulario para editar operarios ya cargados
 - [ ] Formulario para editar descripción de códigos - ahora se hace de manera implicita.
 - [x] Botones para modficiar el estado de las solicitudes
@@ -27,6 +29,9 @@
 - [x] La búsqueda de los filtros debe ser caseinsensitive
 - [x] Agregar a los filtros un comodin % para filtrar
 - [ ] En la lista de solicitudes al modificar el estado de una solicitud hacerlo con todos los items de la misma
+- [ ] Pantalla para crear solicitudes, que listen las solicitudes
+- [ ] Al crear la solicitudes mostras los códigos que ya se encuentran en solicitudes.
+
 
 ## Cambio de perspectiva
 
@@ -37,3 +42,5 @@ Una posible idea es que el retiro de una herramienta solo se permita cuando teng
 Por lo que el flujo de información será:
 
 Solicitud ---> Pedido ---> Entrega
+
+Al hacer las solicitudes, mostrar las solicitudes que se encuentran Pedidas y con Entrega

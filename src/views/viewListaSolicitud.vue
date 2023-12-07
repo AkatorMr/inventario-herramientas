@@ -76,25 +76,25 @@
     <table class="table tab-pane fade show active">
       <thead>
         <tr class="ajustar-ancho">
-          <th scope="col">
+          <th scope="col-1">
             Legajo
             <div @click="Filtro('Legajo')">
               {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
             </div>
           </th>
-          <th scope="col">
+          <th scope="col-1">
             Nombre y Apellido
             <div @click="Filtro('Nombre')">
               {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
             </div>
           </th>
-          <th scope="col">
+          <th scope="col-1">
             Código
             <div @click="Filtro('Codigo')">
               {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
             </div>
           </th>
-          <th scope="col" style="width: 44%">
+          <th scope="col-9" style="width: 44%">
             Descripción
             <div @click="Filtro('Descripcion')">
               {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
@@ -442,6 +442,10 @@ export default {
   width: 90% !important;
   margin: auto;
   margin-bottom: 5px;
+}
+
+.table {
+  font-size: small;
 }
 
 .ajustar-ancho>th:nth-child(1) {

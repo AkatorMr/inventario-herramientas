@@ -27,8 +27,14 @@
 
         </li>
 
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle">Operarios</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <router-link class="dropdown-item" to="/addope">Agregar operario</router-link>
+          </div>
 
-        <li class="nav-item"><router-link class="nav-link" to="/addope">Operarios</router-link> </li>
+        </li>
+
         <li class="nav-item"><router-link class="nav-link" to="/addsec">Sector</router-link></li>
 
       </ul>
