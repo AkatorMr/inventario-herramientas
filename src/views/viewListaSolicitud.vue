@@ -64,71 +64,81 @@
           'CARGADO',
           'DISPONIBLE',
           'ELIMINADA'
-        ]" :key="index" @click="filtroEstado = item;ListarSolicitudes();"> {{ item }} </a>
+        ]" :key="index" @click="filtroEstado = item; ListarSolicitudes();"> {{ item }} </a>
 
       </div>
     </nav>
 
-    <div class="tab-content" >
-      
-    
+    <div class="tab-content">
 
-    <table class="table tab-pane fade show active">
-      <thead>
-        <tr class="ajustar-ancho">
-          <th scope="col-1">
-            Legajo
-            <div @click="Filtro('Legajo')">
-              {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
-            </div>
-          </th>
-          <th scope="col-1">
-            Nombre y Apellido
-            <div @click="Filtro('Nombre')">
-              {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
-            </div>
-          </th>
-          <th scope="col-1">
-            Código
-            <div @click="Filtro('Codigo')">
-              {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
-            </div>
-          </th>
-          <th scope="col-9" style="width: 44%">
-            Descripción
-            <div @click="Filtro('Descripcion')">
-              {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
-            </div>
-          </th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Comandos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(a, key) of lista_solicitudes" :key="key" :class="esta == key ? 'selected' : ''"
-          @click="SeleccionarItem($event, key, a)">
-          <th scope="row">{{ a.Legajo }}</th>
-          <td>{{ a.full_name }}</td>
-          <td>{{ a.cod_herramienta }}</td>
-          <td>{{ a.Descripcion }}</td>
-          
-          <td>
-            {{ a.fecha_solicitud }}
-          </td>
-          <td>
-            <div class="a-icon-group">
-              <div class="a-icon flecha" @click="ActualizarSolicitud(a.id, 'PEDIDO')" title="Cargar en pedido">&#9654;
+
+
+      <table class="table tab-pane fade show active">
+        <thead>
+          <tr class="ajustar-ancho">
+            <th scope="col-1">
+              Legajo
+              <div @click="Filtro('Legajo')">
+                {{ filtro_legajo == "" ? "#######" : filtro_legajo }}
               </div>
-              <div class="a-icon aplicar" title="Marcar como disponible" @click="ActualizarSolicitud(a.id, 'DISPONIBLE')">
+            </th>
+            <th scope="col-1">
+              Nombre y Apellido
+              <div @click="Filtro('Nombre')">
+                {{ filtro_nombre == "" ? "#######" : filtro_nombre }}
               </div>
-              <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
-              <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            </th>
+            <th scope="col-1">
+              Código
+              <div @click="Filtro('Codigo')">
+                {{ filtro_codigo == "" ? "#######" : filtro_codigo }}
+              </div>
+            </th>
+            <th scope="col-9" style="width: 44%">
+              Descripción
+              <div @click="Filtro('Descripcion')">
+                {{ filtro_descripcion == "" ? "#######" : filtro_descripcion }}
+              </div>
+            </th>
+            <th scope="col">Fecha</th>
+            <th scope="col">ID SC
+
+              <div @click="Filtro('id_sc')">
+                {{ filtro_id_sc == "" ? "#######" : filtro_id_sc }}
+              </div>
+            </th>
+            <th scope="col">Comandos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(a, key) of lista_solicitudes" :key="key" :class="esta == key ? 'selected' : ''"
+            @click="SeleccionarItem($event, key, a)">
+            <th scope="row">{{ a.Legajo }}</th>
+            <td>{{ a.full_name }}</td>
+            <td>{{ a.cod_herramienta }}</td>
+            <td>{{ a.Descripcion }}</td>
+
+            <td>
+              {{ a.fecha_solicitud }}
+            </td>
+            <td>
+              {{ a.id_solicitud_compra }}
+            </td>
+            <td>
+              <div class="a-icon-group">
+                <div class="a-icon flecha" @click="ActualizarSolicitud(a.id, 'PEDIDO')" title="Cargar en pedido">&#9654;
+                </div>
+                <div class="a-icon aplicar" title="Marcar como disponible"
+                  @click="ActualizarSolicitud(a.id, 'DISPONIBLE')">
+                </div>
+                <div class="a-icon editar" title="Editar" @click="ActualizarSolicitud(a.id)"></div>
+                <div class="a-icon eliminar" title="Eliminar solicitud" @click="EliminarSolicitud(a.id)"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <button class="btn bt-outline-primary" @click="AnteriorNivel" :disabled="nivel < 2">
       Anterior
@@ -165,13 +175,15 @@ export default {
       filtro_nombre: "",
       filtro_codigo: "",
       filtro_descripcion: "",
+      filtro_id_sc: "",
+
       valoramostrar: "",
-      editar_solicitud:{id_solicitud:0, nuevo_estado:"AGREGAR",nro_solicitud:"", nueva_fecha:""},
+      editar_solicitud: { id_solicitud: 0, nuevo_estado: "AGREGAR", nro_solicitud: "", nueva_fecha: "" },
       esta: null,
       oItemSeleccionado: null,
       bMostrarEliminados: true,
       filtroEstado: "",
-      TabSelect:"",
+      TabSelect: "",
       sPedido: { id_sol: 0, bMostrar: false, nro_pedido: 0, nueva_fecha: "" }
     };
   },
@@ -200,6 +212,10 @@ export default {
           this.filtro_descripcion = valor;
           this.sColumna = "";
           break;
+        case "id_sc":
+          this.filtro_id_sc = valor;
+          this.sColumna = "";
+          break;
         case "Estado":
           this.filtroEstado = valor;
           this.sColumna = "";
@@ -225,6 +241,9 @@ export default {
           break;
         case "Descripcion":
           this.valoramostrar = this.filtro_descripcion;
+          break;
+        case "id_sc":
+          this.valoramostrar = this.filtro_id_sc;
           break;
         case "Estado":
           this.valoramostrar = this.filtroEstado;
@@ -258,7 +277,7 @@ export default {
 
     enviarClick: function () {
       let that = this;
-      
+
       console.log(that.editar_solicitud.nuevo_estado);
 
       var formData = new FormData();
@@ -304,7 +323,7 @@ export default {
       if (estado == "DISPONIBLE") {
         this.bIngresoDatos = false;
         this.editar_solicitud.nuevo_estado = "DISPONIBLE";
-        this.editar_solicitud.nro_solicitud = id_sol;
+        this.editar_solicitud.id_solicitud = id_sol;
         let v = new Date();
         let sFecha = v.getFullYear() + "-";
         sFecha += (v.getMonth() + 1 < 10 ? "0" : "") + (v.getMonth() + 1) + "-";
@@ -357,6 +376,7 @@ export default {
       formData.append("codigo", that.filtro_codigo);
       formData.append("nombre", that.filtro_nombre);
       formData.append("descripcion", that.filtro_descripcion);
+      formData.append("id_sc", that.filtro_id_sc);
       formData.append("bMostrarEliminados", that.bMostrarEliminados);
       formData.append("filtroEstado", that.filtroEstado);
 

@@ -19,7 +19,7 @@
 - [x] Agregar filtro a las solicitudes por estado.
 - [ ] Agregar seguridad a la hora de cargar consumos, algo que relacione el nombre con el legajo como las primeras letras del nombre.
 - [ ] Agregar notificaciones de las consultas con el servidor
-- [ ] Revisar el "Marcar como disponible" de las solicitudes, parece que no anda.
+- [x] Revisar el "Marcar como disponible" de las solicitudes, parece que no anda.
 - [ ] Agregar botón "Ordenar Por" en las tablas.
 - [ ] Agregar cierre de caja, por semana, mes y año
 - [x] En la vista de las solicitudes, separar el "ESTADO" en pestañas.

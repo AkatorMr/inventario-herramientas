@@ -121,6 +121,12 @@ function ListarSolicitudes($_ARGS)
     $nombre = $_ARGS["nombre"];
     $descripcion = $_ARGS["descripcion"];
 
+    /**Para compatibilidad con versio anterior */
+    $id_sc="";
+    if(isset($_ARGS["id_sc"]))
+        $id_sc = $_ARGS["id_sc"];
+    
+
     $filtroEstado = "";
     if (!empty($_ARGS["filtroEstado"]))
         $filtroEstado = $_ARGS["filtroEstado"];
@@ -143,14 +149,15 @@ function ListarSolicitudes($_ARGS)
     $sql .= " AND h.Descripcion LIKE '%$descripcion%'";
     $sql .= " AND o.Legajo LIKE '%$legajo%'";
     $sql .= " AND s.estado LIKE '%$filtroEstado%'";
+    $sql .= " AND s.id_solicitud_compra LIKE '%$id_sc%'";
     $sql .= " AND (LOWER(o.Nombre) LIKE LOWER('%$nombre%')";
     $sql .= " OR upper(o.Nombre) LIKE upper('%$nombre%')";
     $sql .= " OR upper(o.Apellido) LIKE upper('%$nombre%')";
     $sql .= " OR LOWER(o.Apellido) LIKE LOWER('%$nombre%'))";
     $sql .= " GROUP BY h.Codigo, o.Legajo, s.estado";
     $sql .= " ORDER BY o.Legajo LIMIT $inicio,6;";
-    //MPLog("Dentro de api");
-    //MPLog($sql);
+    MPLog("Dentro de api");
+    MPLog($sql);
     //echo $bME;
     return SFr($sql);
 }
