@@ -155,7 +155,7 @@ function ListarSolicitudes($_ARGS)
     $sql .= " OR upper(o.Apellido) LIKE upper('%$nombre%')";
     $sql .= " OR LOWER(o.Apellido) LIKE LOWER('%$nombre%'))";
     $sql .= " GROUP BY h.Codigo, o.Legajo, s.estado";
-    $sql .= " ORDER BY o.Legajo LIMIT $inicio,6;";
+    $sql .= " ORDER BY o.Legajo, h.Codigo LIMIT $inicio,6;";
     MPLog("Dentro de api");
     MPLog($sql);
     //echo $bME;

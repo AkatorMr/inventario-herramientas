@@ -2,7 +2,8 @@
   <div id="app">
     <PopUpMsg ref="PopUpMsgs"></PopUpMsg>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="nav2">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <router-link class="navbar-brand" to="/">Navbar</router-link>
+      
 
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown">
@@ -48,12 +49,14 @@
 
 <script>
 import PopUpMsg from "./components/PopUpMsg.vue";
+import router from "./router";
 
 export default {
   name: "CargarOperarios",
   components: {
-    PopUpMsg
-  },
+    PopUpMsg,
+    router
+},
   data() {
     return {
       scon: false
