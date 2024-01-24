@@ -44,3 +44,24 @@ Por lo que el flujo de información será:
 Solicitud ---> Pedido ---> Entrega
 
 Al hacer las solicitudes, mostrar las solicitudes que se encuentran Pedidas y con Entrega
+
+Cada elemnto debe terner una lista y un botón de crear.
+
+### Solicitudes:
+
+- [ ] Crear solicitud -> Ir a formulario para cargar la o las solicitudes
+- [ ] En el formulario de cargar de solicitudes un botón para crear pedido
+- [ ] Lista de solicitudes con el botón de crear pedido
+- [ ] El botón de crear pedido debe ir a un formulario para crear los pedidos
+
+### Pedido:
+
+- [ ] Crear pedido desde solicitudes - Muestra una lista de solicitudes para crear pedido
+- [ ] Lista de pedidos realizados, muestra fecha, estado de pedido
+- [ ] 
+
+### Engtrega: 
+
+Esta parte es lo de consumo que se debe cambiar la manera de mostrar y relacionar con la tabla de pedidos
+
+- [ ] 
