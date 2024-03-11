@@ -2,68 +2,36 @@
   <div class="container">
     <div class="MuroDeCarga" v-if="bMuroDeCarga"></div>
 
-    <input-drop-down
-      :prompt="'Legajo o Nombre'"
-      :lista_completa="lista_operarios"
-      @onchange="
-        (val) => {
-          tNombre = val;
-        }
-      "
-    ></input-drop-down>
+    <input-drop-down :prompt="'Legajo o Nombre'" :lista_completa="lista_operarios" @onchange="(val) => {
+        tNombre = val;
+      }
+      "></input-drop-down>
 
     <div class="input-group mb-3">
       <span class="input-group-text col-md-2">Código y Descripción:</span>
-      <input
-        type="text"
-        class="form-control col-md-1"
-        placeholder="Código"
-        aria-label="Código"
-        v-model="tCodigo"
-        @keyup="FiltrarHerramienta()"
-        @focus="bFocusCodigoODescripcion = true"
-        @blur="bFocusCodigoODescripcion = false"
-      />
+      <input type="text" class="form-control col-md-1" placeholder="Código" aria-label="Código" v-model="tCodigo"
+        @keyup="FiltrarHerramienta()" @focus="bFocusCodigoODescripcion = true" @blur="bFocusCodigoODescripcion = false" />
 
-      <input
-        type="text"
-        class="form-control col-md"
-        style="width: 35%"
-        placeholder="Descripción"
-        aria-label="Descripción"
-        v-model="tDescripcion"
-        @keyup="FiltrarHerramienta()"
-        @focus="bFocusCodigoODescripcion = true"
-        @blur="bFocusCodigoODescripcion = false"
-      />
+      <input type="text" class="form-control col-md" style="width: 35%" placeholder="Descripción" aria-label="Descripción"
+        v-model="tDescripcion" @keyup="FiltrarHerramienta()" @focus="bFocusCodigoODescripcion = true"
+        @blur="bFocusCodigoODescripcion = false" />
 
-      <ul
-        :class="
-          'dropdown-menu ' +
-          (lista_codigos_filtro.length > 0 && bFocusCodigoODescripcion
-            ? 'show'
-            : '')
-        "
-        style="
+      <ul :class="'dropdown-menu ' +
+        (lista_codigos_filtro.length > 0 && bFocusCodigoODescripcion
+          ? 'show'
+          : '')
+        " style="
           position: absolute;
           inset: 0px auto auto 0px;
           margin: 0px;
           transform: translate(185px, 40px);
-        "
-      >
+        ">
         <li>
-          <a
-            class="dropdown-item"
-            href="#"
-            v-for="(item, key) in lista_codigos_filtro"
-            :key="key"
-            @mousedown="
-              tCodigo = item.Codigo;
-              tDescripcion = item.Descripcion;
-              FiltrarHerramienta();
-            "
-            >{{ item.Codigo }} | {{ item.Descripcion }}</a
-          >
+          <a class="dropdown-item" href="#" v-for="(item, key) in lista_codigos_filtro" :key="key" @mousedown="
+            tCodigo = item.Codigo;
+          tDescripcion = item.Descripcion;
+          FiltrarHerramienta();
+          ">{{ item.Codigo }} | {{ item.Descripcion }}</a>
         </li>
         <li v-if="lista_codigos_filtro.length == 11">
           <a class="dropdown-item">......</a>
@@ -72,32 +40,16 @@
 
       <span class="input-group-text col-md-1">Cantidad:</span>
 
-      <input
-        class="form-control col-md"
-        placeholder="Cantidad"
-        aria-label="Cantidad"
-        v-model="tCantidad"
-        type="number"
-      />
+      <input class="form-control col-md" placeholder="Cantidad" aria-label="Cantidad" v-model="tCantidad" type="number" />
+
+      <button class="btn btn-outline-success col-md-1">+</button>
     </div>
 
     <div class="input-group mb-3">
       <span class="input-group-text col-md-1">Fecha:</span>
-      <input
-        type="date"
-        class="form-control col-md-1"
-        placeholder="dd/mm/yyyy"
-        aria-label="Fecha"
-        v-model="tFecha"
-      />
-<span class="input-group-text col-md-2">Nro Solicitud:</span>
-      <input
-        type="number"
-        class="form-control col-md-1"
-        placeholder="##"
-  
-        v-model="tNroSolicitud"
-      />
+      <input type="date" class="form-control col-md-1" placeholder="dd/mm/yyyy" aria-label="Fecha" v-model="tFecha" />
+      <span class="input-group-text col-md-2">Nro Solicitud:</span>
+      <input type="number" class="form-control col-md-1" placeholder="##" v-model="tNroSolicitud" />
     </div>
     <button class="btn btn-outline-primary" @click="CargarSolicitud()">
       Cargar Solicitud
@@ -113,30 +65,30 @@ export default {
   name: 'viewSolicitud',
   components: {
     InputDropDown
-  },data() {
+  }, data() {
     return {
-      lista_sectores:[],
-      lista_operarios:[],
+      lista_sectores: [],
+      lista_operarios: [],
       lista_codigos_filtro: [],
-      tNombre:"",bMuroDeCarga:false,
+      tNombre: "", bMuroDeCarga: false,
       bFocusCodigoODescripcion: true,
       tCodigo: "",
       tCantidad: "",
-       tFecha:"",
+      tFecha: "",
       tDescripcion: "",
-      tNroSolicitud:0
+      tNroSolicitud: 0
 
     }
   },
-  
+
   methods: {
-    ListarSectores: function(){
+    ListarSectores: function () {
       let that = this;
-      fetch('/api/ListarSectores').then(response => response.json()).then(resp=>that.lista_sectores=resp);
-  
+      fetch('/api/ListarSectores').then(response => response.json()).then(resp => that.lista_sectores = resp);
+
     },
     CargarSolicitud: function () {
-      
+
       let legajo = this.tNombre.split("|")[0];
       legajo = legajo.substring(0, 6);
 
@@ -147,9 +99,9 @@ export default {
       formData.append("legajo", legajo);
       formData.append("codigo", that.tCodigo);
       formData.append("cantidad", that.tCantidad);
-      formData.append("fecha",that.tFecha);
-      formData.append("nro_solicitud",that.tNroSolicitud);
-      
+      formData.append("fecha", that.tFecha);
+      formData.append("nro_solicitud", that.tNroSolicitud);
+
       console.log(this.tNroSolicitud);
       //formData.append("nombre", that.op_nombre);
       //formData.append("sector", that.op_sector);
@@ -226,7 +178,7 @@ export default {
         }
       }
     },
-    
+
   },
   mounted() {
     this.ListarOperarios();
@@ -235,8 +187,8 @@ export default {
 }
 </script>
 <style scoped>
-.MuroDeCarga{
-   position:absolute;
+.MuroDeCarga {
+  position: absolute;
   left: 0;
   width: 100%;
   height: 100%;

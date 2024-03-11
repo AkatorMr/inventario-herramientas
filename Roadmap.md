@@ -31,6 +31,8 @@
 - [ ] En la lista de solicitudes al modificar el estado de una solicitud hacerlo con todos los items de la misma
 - [ ] Pantalla para crear solicitudes, que listen las solicitudes
 - [ ] Al crear la solicitudes mostras los códigos que ya se encuentran en solicitudes.
+- [ ] Cuando se filtra por nombre y se usa acento no se obtienen resultados
+
 
 
 ## Cambio de perspectiva
@@ -65,3 +67,8 @@ Cada elemnto debe terner una lista y un botón de crear.
 Esta parte es lo de consumo que se debe cambiar la manera de mostrar y relacionar con la tabla de pedidos
 
 - [ ] 
+
+
+## Unión de tablas
+
+Consumos (id_solicitud_compra) ------- Pedido ()

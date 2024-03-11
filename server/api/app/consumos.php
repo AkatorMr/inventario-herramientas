@@ -42,19 +42,20 @@ function ListarConsumosEstadistica($_ARGS)
 }
 
 
-function DarDeBaja($_ARGS){
+function DarDeBaja($_ARGS)
+{
     $legajo = $_ARGS["legajo"];
     $codigo = $_ARGS["codigo"];
     $nota = $_ARGS["nota"];
 
     $sql = "SELECT id FROM consumos WHERE `legajo_operario`='$legajo' AND `cod_herramienta` = '$codigo' AND `estado`='CONSUMIDA' LIMIT 1;";
     $obj = json_decode(SFr($sql));
-    if(count($obj)>0){
+    if (count($obj) > 0) {
         $id = $obj[0]->id;
         print_r($obj);
         $sql2 = "UPDATE consumos SET `estado` = 'BAJA', `nota` = '$nota'  WHERE `id`='$id'";
 
-        return json_encode((IN($sql2)?"ok":"error"));
+        return json_encode((IN($sql2) ? "ok" : "error"));
     }
     return json_encode("error");
 }
@@ -101,15 +102,20 @@ function GenerarConsumo($_ARGS)
     $legajo = $_ARGS["legajo"];
     $a_codigo = $_ARGS["codigo"]; //Es un array
     $a_cantidad = $_ARGS["cantidad"]; // Es un array
-    if(!isset($_ARGS["estado"]) && !empty($_ARGS["estado"]))
+    if (!isset($_ARGS["estado"]) && !empty($_ARGS["estado"]))
         $a_estado = $_ARGS["estado"]; //Es un array
 
     $nota = "";
-    
-    if(isset($_ARGS["nota"]) && !empty($_ARGS["nota"]))
+
+    if (isset($_ARGS["nota"]) && !empty($_ARGS["nota"]))
         $nota = $_ARGS["nota"]; //La nota debe ser por cada consumo
-    
-    $vale_oracle = $_ARGS["valeoracle"];
+
+    $vale_oracle = "";
+    $nro_sap = "";
+    if (isset($_ARGS["valeoracle"]))
+        $vale_oracle = $_ARGS["valeoracle"];
+    if (isset($_ARGS["nrosap"]))
+        $nro_sap = $_ARGS["nrosap"];
 
     $vale_fecha = $_ARGS["valefecha"];
 
@@ -134,12 +140,13 @@ function GenerarConsumo($_ARGS)
     $s = "";
     $c = true;
     $msg = "";
+    
     for ($i = 0; $i < count($a_codigo); $i++) {
         $codigo = $a_codigo[$i];
         $cantidad = $a_cantidad[$i];
 
         $estado = "CONSUMIDA";
-        if(isset($a_estado))
+        if (isset($a_estado))
             $estado = $a_estado[$i];
 
         //Esto vale oro
@@ -170,10 +177,17 @@ function GenerarConsumo($_ARGS)
             $msg = "Solicitud Creada";
 
         }
+        //$msg = "";
         if (IN($sql)) {
-            $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,nota,estado,vale_oracle)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','$nota','$estado','$vale_oracle')";
+            //$msg .= "A";
+            if (!empty($vale_oracle))
+                $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,nota,estado,vale_oracle)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','$nota','$estado','$vale_oracle')";
+            if (!empty($nro_sap))
+                $sql_2 = "INSERT INTO consumos (legajo_operario,cod_herramienta,cantidad,fecha_consumido,nota,estado,nro_reserva)VALUES('$legajo','$codigo','$cantidad','$fecha_consumo','$nota','$estado','$nro_sap')";
+            //$msg .= "$sql_2";
             //MPLog($sql_2);
             if (IN($sql_2)) {
+                //$msg .= "A";
                 $c = true;
                 $s .= "1";
                 $msg .= "\nConsumo generado";
@@ -184,9 +198,9 @@ function GenerarConsumo($_ARGS)
         $s = $sql;
     }
     if ($c) {
-        return json_encode(array($msg,"ok"));
+        return json_encode(array($msg, "ok"));
     }
-    return json_encode(array("error","error"));
+    return json_encode(array($msg, "error"));
 
 }
 

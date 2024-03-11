@@ -69,10 +69,16 @@
       <input class="form-control col-md-1" placeholder="dd/mm/yyyy" v-model="tVale.Fecha" type="date" />
     </input-drop-down>
 
-    <div class="input-group mb-3">
+    <!-- <div class="input-group mb-3">
       <span class="input-group-text col-md-2">Vale Oracle:</span>
 
       <input class="form-control col-md" placeholder="Oracle" v-model="tVale.Oracle" type="number" />
+
+    </div> -->
+    <div class="input-group mb-3">
+      <span class="input-group-text col-md-2">Reserva SAP:</span>
+
+      <input class="form-control col-md" placeholder="Nro SAP" v-model="tVale.nrosap" type="number" />
 
     </div>
 
@@ -110,7 +116,7 @@ export default {
       bFocusCodigoODescripcion: true,
       tNombre: "",
       bMuroDeCarga: false,
-      tVale: { Oracle: null, Fecha: null },
+      tVale: { Oracle: null, Fecha: null, nrosap:null },
       AgregarDo: "Agregar",
       lista_a_consumir: [],
       notaConsumo: ""
@@ -182,7 +188,8 @@ export default {
         if(that.lista_a_consumir[index].estado!="")
           formData.append("estado[" + index + "]", that.lista_a_consumir[index].estado);
       }
-      formData.append("valeoracle", that.tVale.Oracle);
+      //formData.append("valeoracle", that.tVale.Oracle);
+      formData.append("nrosap", that.tVale.nrosap);
       if (this.notaConsumo != "")
         formData.append("nota", that.notaConsumo);
       //formData.append("mpot", that.tVale.MPot);
